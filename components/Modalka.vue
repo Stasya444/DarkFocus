@@ -49,7 +49,6 @@
         </h2>
       </div>
 
-      <!-- Перемикач -->
       <div
         class="flex bg-white/20 backdrop-blur-sm p-1 rounded-full mb-6 border border-white/40"
       >
@@ -89,7 +88,6 @@
             />
           </div>
 
-          <!-- Пароль -->
           <div>
             <input
               v-model="form.password"
