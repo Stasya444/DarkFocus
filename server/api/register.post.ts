@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
     const { name, email, phone, password, confirmPassword, role } = body;
 
     // Валідація
-    if (!name.trim() || !email.trim() || !password.trim() || !confirmPassword.trim() || role == undefined) {
+    if (!name.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
       return { success: false, message: "Усі поля обов’язкові" };
     }
     // Валідація email

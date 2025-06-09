@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
 async function main() {
@@ -15,7 +16,7 @@ async function main() {
       name: "Anna Petrova",
       email: "anna@gmail.com",
       phone: "+380501112233",
-      password: "12345",
+      password:  await bcrypt.hash("12345", await bcrypt.genSalt(10)),
       role: "photographer",
     },
   });
@@ -41,7 +42,7 @@ async function main() {
       name: "Ivan Sydorenko",
       email: "ivan@gmail.com",
       phone: "+380502223344",
-      password: "12345",
+      password: await bcrypt.hash("12345", await bcrypt.genSalt(10)),
       role: "photographer",
     },
   });
@@ -67,7 +68,7 @@ async function main() {
       name: "Maria Kovalenko",
       email: "maria@gmail.com",
       phone: "+380503334455",
-      password: "12345",
+      password:  await bcrypt.hash("12345", await bcrypt.genSalt(10)),
       role: "photographer",
     },
   });
@@ -93,7 +94,7 @@ async function main() {
       name: "Dmytro Bondarenko",
       email: "dmytro@gmail.com",
       phone: "+380504445566",
-      password: "12345",
+      password:  await bcrypt.hash("12345", await bcrypt.genSalt(10)),
       role: "photographer",
     },
   });
@@ -119,7 +120,7 @@ async function main() {
       name: "Olena Shevchenko",
       email: "olena@gmail.com",
       phone: "+380505556677",
-      password: "12345",
+      password:  await bcrypt.hash("12345", await bcrypt.genSalt(10)),
       role: "photographer",
     },
   });
@@ -145,7 +146,7 @@ async function main() {
       name: "Andriy Vasylenko",
       email: "andriy@gmail.com",
       phone: "+380506667788",
-      password: "12345",
+      password:  await bcrypt.hash("12345", await bcrypt.genSalt(10)),
       role: "photographer",
     },
   });
@@ -171,7 +172,7 @@ async function main() {
       name: "Natalia Hryn",
       email: "natalia@gmail.com",
       phone: "+380507778899",
-      password: "12345",
+      password:  await bcrypt.hash("12345", await bcrypt.genSalt(10)),
       role: "photographer",
     },
   });
@@ -197,7 +198,7 @@ async function main() {
       name: "Serhii Kravets",
       email: "serhii@gmail.com",
       phone: "+380508889900",
-      password: "12345",
+      password:  await bcrypt.hash("12345", await bcrypt.genSalt(10)),
       role: "photographer",
     },
   });
@@ -223,7 +224,7 @@ async function main() {
       name: "Yulia Romanenko",
       email: "yulia@gmail.com",
       phone: "+380509991122",
-      password: "12345",
+      password:  await bcrypt.hash("12345", await bcrypt.genSalt(10)),
       role: "photographer",
     },
   });
@@ -249,7 +250,7 @@ async function main() {
       name: "Taras Melnyk",
       email: "taras@gmail.com",
       phone: "+380501234567",
-      password: "12345",
+      password:  await bcrypt.hash("12345", await bcrypt.genSalt(10)),
       role: "photographer",
     },
   });

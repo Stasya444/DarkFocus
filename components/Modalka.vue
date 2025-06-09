@@ -122,7 +122,7 @@
 
           <div class="flex items-center">
             <input
-              v-if="!form.phone.includes('+380') && !form.phone.includes('+')"
+              v-if="(!form.phone.includes('+380') && !form.phone.includes('+'))"
               type="text"
               placeholder="+380"
               value="+380"
@@ -227,7 +227,8 @@ function close() {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "",
+    role: false,
+    phone: ""
   };
   message.value = "";
 }
@@ -241,7 +242,7 @@ async function handleSubmit() {
   }
 
   if (!isLogin.value) {
-    if (!form.value.name || !form.value.confirmPassword || !form.value.role) {
+    if (!form.value.name || !form.value.confirmPassword) {
       message.value = "Заповніть усі поля";
       return;
     }
