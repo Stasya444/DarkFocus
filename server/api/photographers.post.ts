@@ -57,7 +57,6 @@ export default defineEventHandler(async (event) => {
     const existing = await prisma.photographer.findFirst({
       where: {
         OR: [
-          { name: fullName },
           { userId: Number(fields.userId) }
         ]
       }

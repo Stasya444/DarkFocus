@@ -3,7 +3,8 @@ import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
 async function main() {
-  // Clean up existing data
+  try {
+      // Clean up existing data
   await prisma.photo.deleteMany();
   await prisma.rating.deleteMany();
   await prisma.booking.deleteMany();
@@ -269,6 +270,9 @@ async function main() {
       userId: user10.id,
     },
   });
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 main()

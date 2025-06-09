@@ -39,7 +39,7 @@ model Photographer {
   avatar      String?
   isVerified  Boolean   @default(false)
   createdAt   DateTime  @default(now())
-  user        User @relation(fields: [userId], references: [id])
+  user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      Int
   photos      Photo[]
   ratings     Rating[]
@@ -51,17 +51,17 @@ model Photo {
   url            String
   title          String?
   isFeatured     Boolean      @default(false)
-  photographer   Photographer @relation(fields: [photographerId], references: [id])
+  photographer   Photographer @relation(fields: [photographerId], references: [id], onDelete: Cascade)
   photographerId Int
 }
 
 model Rating {
   id             Int          @id @default(autoincrement())
-  author         User          @relation(fields: [authorId], references: [id])
+  author         User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId       Int
   comment        String
   rating         Int
-  photographer   Photographer @relation(fields: [photographerId], references: [id])
+  photographer   Photographer @relation(fields: [photographerId], references: [id], onDelete: Cascade)
   photographerId Int
   createdAt      DateTime     @default(now())
 }
@@ -71,9 +71,9 @@ model Booking {
   name           String
   phone          String
   date           DateTime
-  photographer   Photographer @relation(fields: [photographerId], references: [id])
+  photographer   Photographer @relation(fields: [photographerId], references: [id], onDelete: Cascade)
   photographerId Int
-  user           User          @relation(fields: [userId], references: [id])
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId         Int 
   createdAt      DateTime @default(now())
 }

@@ -1,12 +1,12 @@
 <template>
   <div
-    class="max-w-3xl mx-auto bg-white/5 backdrop-blur-lg border border-white/10 p-8 rounded-3xl shadow-2xl text-white"
+    class="w-full mx-auto bg-white/5 backdrop-blur-lg border border-white/10 p-6 shadow-2xl text-white"
   >
     <h1 class="text-2xl font-bold mb-6 text-center drop-shadow-md">
       Анкета фотографа
     </h1>
-    <form @submit.prevent="handleSubmit" class="space-y-6">
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <form @submit.prevent="handleSubmit" class="gap-4">
+      <div class="flex flex-col gap-4">
         <input
           v-model="form.firstName"
           placeholder="Імʼя"
@@ -46,9 +46,9 @@
         placeholder="Про себе"
         rows="4"
         required
-        class="input-glass w-full"
+        class="input-glass w-full mt-2"
       ></textarea>
-
+<!-- 
       <div>
         <label class="block mb-2 text-sm text-white/70">
           Завантажити фото
@@ -60,7 +60,7 @@
           @change="handleFiles"
           class="input-glass file:px-3 file:py-1 file:rounded-full file:border-0 file:bg-white/20 file:text-white hover:file:bg-white/30"
         />
-      </div>
+      </div> -->
 
       <div class="flex gap-3 mt-4 items-center flex-wrap">
         <button
@@ -181,7 +181,7 @@ async function handleSubmit() {
   background: rgba(255, 255, 255, 0.05);
   color: white;
   backdrop-filter: blur(6px);
-  transition: all 0.3s ease;
+  transition: border 250ms ease, background 200ms ease;
 }
 .input-glass::placeholder {
   color: rgba(255, 255, 255, 0.5);

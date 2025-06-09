@@ -8,11 +8,11 @@
       <!-- Контакти -->
       <div class="flex flex-col md:flex-row items-center gap-4 text-sm">
         <a
-          href="mailto:support@photofinder.com"
+          href="mailto:support@darkfocus.com"
           class="hover:text-gray-200 flex items-center gap-2 transition"
         >
           <Icon name="fa6-solid:envelope" class="w-4 h-4" />
-          support@photofinder.com
+          support@darkfocus.com
         </a>
         <a
           href="tel:+380991234567"
@@ -25,7 +25,7 @@
 
       <!-- Копірайт -->
       <div class="text-xs text-center md:text-left text-gray-400">
-        © 2025 PhotoHub. Всі права захищені.
+        © 2025 DarkFocus. Всі права захищені.
       </div>
 
       <!-- Соцмережі -->

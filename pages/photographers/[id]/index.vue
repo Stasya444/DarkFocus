@@ -1,6 +1,32 @@
 <template>
   <div v-if="!photographer" class="min-h-screen flex items-center justify-center bg-black text-white text-xl">
-    Завантаження...
+        <div
+      class="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 shadow-2xl max-w-4xl w-full"
+    >
+      <h1 class="text-3xl font-light text-white mb-4 text-center">
+        <div class="w-1/2 bg-neutral-600 h-4 rounded-md flex mx-auto animate-pulse duration-200"></div>
+      </h1>
+
+      <div class="flex justify-center mb-6">
+        <div class="w-36 h-36 rounded-full bg-neutral-600 animate-pulse duration-200"></div>
+      </div>
+
+      <div class="text-center space-y-2 text-white/80 mb-6 flex flex-col">
+        <div class="my-2">
+          <div class="w-1/2 bg-neutral-600 h-4 rounded-md flex mx-auto animate-pulse duration-200"></div>
+        </div>
+        <div class="my-2">
+          <div class="w-1/3 bg-neutral-600 h-4 rounded-md flex mx-auto animate-pulse duration-200"></div>
+        </div>
+        <div class="my-2">
+          <div class="w-1/3 bg-neutral-600 h-4 rounded-md flex mx-auto animate-pulse duration-200"></div>
+        </div>
+        <!-- <p v-if="photographer" class="text-lg">{{ photographer.name }}</p>
+        <p v-if="photographer" class="text-lg">Ціна: {{ photographer.price }} грн</p>
+        <LazyNuxtLink v-if="user.role !== 'guest' && photographer" :to="'/photographers/'+photographer.id" class="text-gray-400 hover:text-white duration-200">Перейти до профілю фотографа</LazyNuxtLink>
+        <button @click="isCreatingPhotographer = true" v-if="user.id == store.userId && store.userRole != 'guest' && !photographer" to="/" class="text-gray-400 hover:text-white duration-200">Створити профіль фотографа</button> -->
+      </div>
+    </div>
   </div>
 
   <div
@@ -10,6 +36,7 @@
     <div
       class="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 shadow-2xl max-w-4xl w-full"
     >
+    <!-- Адмін кнопки -->
     <div v-if="store.userRole == 'admin'" class="flex justify-center items-center">
       <button
           v-if="!photographer.isVerified"
@@ -26,6 +53,7 @@
         Деверифікувати
         </button>
     </div>
+    <!-- Кнопки фотографа -->
       <div class="flex mx-auto w-fit gap-2" v-if="isOwn">
         <button
           v-if="!isEditing"
@@ -49,12 +77,21 @@
         </button>
         </template>
       </div>
+
       <h1 v-if="!isEditing" class="text-3xl font-light text-white mb-2 text-center">
         {{ photographer.name }}
       </h1>
       <input v-else class="text-3xl font-light text-white mb-2 text-center border mx-auto flex" v-model="editForm.name" type="text">
       <div v-if="!photographer.isVerified" class="flex mx-auto mb-4 justify-center w-full">
         <span class="text-red-400 text-sm text-center">Фотограф не верифікований</span>
+      </div>
+      <div class="flex mx-auto w-fit gap-2 mt-2 mb-4 text-md">
+        <span class="text-yellow-400">
+          ★
+        </span>
+        <span class="text-gray-400 font-bold justify-center">
+          {{ +photographer.totalRating.toFixed(2) }}
+        </span>
       </div>
 
       <!-- Аватар -->
@@ -76,9 +113,9 @@
       </div>
 
       <!-- Статистика -->
-      <p class="text-sm text-white/60">{{ formatPhotographerStats(photographer.ordersCount, photographer.experience) }}</p>
-      <p v-if="photographer.rating" class="text-sm text-white/80 mt-1">⭐ {{ photographer.rating.toFixed(1) }}/5</p>
-      <p v-else class="text-sm text-white/40 mt-1 italic">Рейтинг ще не сформовано</p>
+      <div class="flex mx-auto w-fit justify-center">
+        <p class="text-sm text-white/60">{{ formatPhotographerStats(photographer.ordersCount, photographer.experience) }}</p>
+      </div>
 
       <!-- Фото -->
       <div class="mt-6 grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -318,6 +355,12 @@ const handleSubmitReview = async () => {
       reviewForm.value.rating = null;
       
       photographer.value = data.photographer;
+      const response = await $fetch(`/api/photographers/rating/${route.params.id}`)
+      const totalRating = await formTotalRating(response.rating)
+      photographer.value = {
+        ...photographer.value,
+        totalRating
+      };
     } else {
       alert("Помилка при відправленні відгуку");
     }
@@ -341,6 +384,12 @@ const handleDeleteReview = async (id) => {
     if (res.ok) {
       const data = await res.json();
       photographer.value = data.photographer;
+      const response = await $fetch(`/api/photographers/rating/${route.params.id}`)
+      const totalRating = await formTotalRating(response.rating)
+      photographer.value = {
+        ...photographer.value,
+        totalRating
+      };
     } else {
       alert("Помилка при видаленні відгуку");
     }
@@ -368,6 +417,12 @@ const handleUpdateProfile = async () => {
     if(data.statusCode == 200) {
       photographer.value = data.photographer;
       isEditing.value = false;
+      const response = await $fetch(`/api/photographers/rating/${route.params.id}`)
+      const totalRating = await formTotalRating(response.rating)
+      photographer.value = {
+        ...photographer.value,
+        totalRating
+      };
     } else {
       throw new Error(data.statusMessage || "Помилка при оновленні профілю");
     }
@@ -387,6 +442,12 @@ const handleVerifyProfile = async () => {
     const data = await res.json();
     if(data.status == 200) {
       photographer.value = data.photographer
+      const response = await $fetch(`/api/photographers/rating/${route.params.id}`)
+      const totalRating = await formTotalRating(response.rating)
+      photographer.value = {
+        ...photographer.value,
+        totalRating
+      };
     } else {
       throw new Error(data.message || "Помилка при верифікації профілю");
     }
@@ -405,6 +466,12 @@ const handleDeverifyProfile = async () => {
     const data = await res.json();
     if(data.status == 200) {
       photographer.value = data.photographer
+      const response = await $fetch(`/api/photographers/rating/${route.params.id}`)
+      const totalRating = await formTotalRating(response.rating)
+      photographer.value = {
+        ...photographer.value,
+        totalRating
+      };
     } else {
       throw new Error(data.message || "Помилка при деверифікації профілю");
     }
@@ -412,6 +479,21 @@ const handleDeverifyProfile = async () => {
     alert(err.message);
   }
 };
+
+const formTotalRating = async (allRatings) => {
+  try {
+    const allRatingsCount = allRatings.length
+    let allRatingsSum = 0;
+
+    for(let i = 0; i < allRatingsCount; i++) {
+      allRatingsSum += allRatings[i].rating
+    }
+
+    return allRatingsSum / allRatingsCount
+  } catch (error) {
+    console.error(error)
+  }
+}
 
 onMounted(async () => {
   try {
@@ -429,6 +511,14 @@ onMounted(async () => {
     };
 
     isOwn.value = photographer.value.userId === store.userId;
+
+    const response = await $fetch(`/api/photographers/rating/${route.params.id}`)
+    const totalRating = await formTotalRating(response.rating)
+    photographer.value = {
+      ...photographer.value,
+      totalRating
+    };
+
 
     // const ratingRes = await fetch(
     //   `/api/rating?photographerId=${route.params.id}`
