@@ -8,7 +8,12 @@ export default defineEventHandler(async (event) => {
     const { name, email, phone, password, confirmPassword, role } = body;
 
     // Валідація
-    if (!name.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
+    if (
+      !name.trim() ||
+      !email.trim() ||
+      !password.trim() ||
+      !confirmPassword.trim()
+    ) {
       return { success: false, message: "Усі поля обов’язкові" };
     }
     // Валідація email
@@ -20,11 +25,11 @@ export default defineEventHandler(async (event) => {
           "Email має бути у форматі email (наприклад, example@domain.com)",
       };
     }
-    if(!phone.startsWith("+380") || phone.length !== 13) {
+    if (!phone.startsWith("+380") || phone.length !== 13) {
       return {
         success: false,
         message: "Телефон має починатися з +380 і містити 12 символів",
-      }
+      };
     }
     // Якщо пароль більше 24 символів
     if (password.trim().length < 6) {
