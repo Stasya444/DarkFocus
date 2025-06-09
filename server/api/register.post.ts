@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
       return {
         success: false,
         message:
-          "Email має бути у форматі Gmail (наприклад, example@gmail.com)",
+          "Email має бути у форматі email (наприклад, example@domain.com)",
       };
     }
     if(!phone.startsWith("+380") || phone.length !== 13) {
