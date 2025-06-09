@@ -34,8 +34,6 @@ model Photographer {
   style       String?
   price       Int?
   about       String?
-  experience  Int?     
-  ordersCount Int?      
   avatar      String?
   isVerified  Boolean   @default(false)
   createdAt   DateTime  @default(now())

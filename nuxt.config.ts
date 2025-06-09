@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     "@nuxt/scripts",
     "@nuxt/ui",
     "nuxt-icon",
+    "@vueuse/nuxt",
   ],
 
   css: ["~/assets/css/main.css"],

@@ -133,6 +133,10 @@ const links = computed(() => {
     { path: "/photographers", title: "ФОТОГРАФИ" },
   ];
 
+  if (store.userRole !== "guest") {
+    allLinks.push({ path: "/orders", title: "ЗАМОВЛЕННЯ" });
+  }
+
   if (store.userRole === "admin") {
     allLinks.push({ path: "/admin", title: "АДМІН ПАНЕЛЬ" });
     allLinks.push({ path: "/add-photographer", title: "ДОДАТИ ФОТОГРАФА" });

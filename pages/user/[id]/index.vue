@@ -60,7 +60,7 @@
       </div>
     </div>
 
-    <div on:ou class="w-full overflow-hidden max-w-160 h-fit rounded-2xl bg-neutral-500/60 backdrop-blur-md absolute" v-if="user.id == store.userId && !photographer && isCreatingPhotographer">
+    <div ref="modalWindow" class="w-full overflow-hidden max-w-160 h-fit rounded-2xl bg-neutral-500/60 backdrop-blur-md absolute" v-if="user.id == store.userId && !photographer && isCreatingPhotographer">
         <!-- <div class="flex flex-col px-3 py-1 gap-1">
             <h1 class="text-3xl font-bold text-center mb-10 mt-2">Створення аккаунту фотографа</h1>
 
@@ -99,16 +99,17 @@
 
 <script setup>
 import { useRoute } from "vue-router";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, useTemplateRef } from "vue";
 import { useUserStore } from "../../../stores/user";
 import AddPhotographerForm from "../../../components/AddPhotographerForm.vue";
+import {onClickOutside} from '@vueuse/core'
 
 const route = useRoute();
 const user = ref(null);
 const store = useUserStore();
 const photographer = ref(null);
 const isCreatingPhotographer = ref(false);
-
+const modalWindow = useTemplateRef('modalWindow')
 
 
 onMounted(async () => {
@@ -126,6 +127,8 @@ onMounted(async () => {
   } catch (err) {
     console.error(err);
   }
+
+  onClickOutside(modalWindow, event => isCreatingPhotographer.value = false)
 });
 </script>
 

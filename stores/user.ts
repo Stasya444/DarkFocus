@@ -6,6 +6,7 @@ interface User {
     name: string         // ім'я користувача
     email: string        // email користувача
     role: 'guest' | 'photographer' | 'admin' // роль користувача
+    phone: string
 }
 
 interface UserState {
@@ -41,6 +42,8 @@ export const useUserStore = defineStore('user', {
         userId: (state) => state.user?.id || null,
         // Повертаємо роль користувача, якщо він є
         userRole: (state) => state.user?.role || null,
+        // Повертаємо номер телефону користувача, якщо він є
+        userPhone: (state) => state.user?.phone || "",
         // Повертаємо статус авторизації
         isLoggedIn: (state) => state.isAuthenticated && state.user?.id,
     },

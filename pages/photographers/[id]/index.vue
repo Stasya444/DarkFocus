@@ -85,7 +85,7 @@
       <div v-if="!photographer.isVerified" class="flex mx-auto mb-4 justify-center w-full">
         <span class="text-red-400 text-sm text-center">Фотограф не верифікований</span>
       </div>
-      <div class="flex mx-auto w-fit gap-2 mt-2 mb-4 text-md">
+      <div v-if="photographer.totalRating" class="flex mx-auto w-fit gap-2 mt-2 mb-4 text-md">
         <span class="text-yellow-400">
           ★
         </span>
@@ -113,8 +113,9 @@
       </div>
 
       <!-- Статистика -->
-      <div class="flex mx-auto w-fit justify-center">
-        <p class="text-sm text-white/60">{{ formatPhotographerStats(photographer.ordersCount, photographer.experience) }}</p>
+      <div class="flex mx-auto w-fit justify-center gap-5 text-md font-medium">
+        <p  v-if="photographer.bookings" class="text-sm text-gray-400">💼 {{ photographer.bookings.length }} замовлень</p>
+        <p class="text-sm text-gray-400">🕒 {{ differenceInYears(new Date(), new Date(photographer.createdAt)) }} років з нами</p>
       </div>
 
       <!-- Фото -->
@@ -235,18 +236,20 @@
     v-if="showBooking"
     class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
   >
-    <div class="bg-white p-6 rounded-xl w-full max-w-md text-black relative">
+    <div
+      ref="modalWindow"
+      class="bg-neutral-900 p-6 rounded-xl w-full max-w-md text-black relative text-white">
       <h3 class="text-xl mb-4 text-center font-semibold">Бронювання</h3>
 
-      <input v-model="booking.name" type="text" placeholder="Ваше ім’я" class="w-full mb-3 px-4 py-3 bg-white/10 border border-white/20 rounded-xl placeholder-white/60" />
-      <input v-model="booking.phone" type="tel" placeholder="Номер телефону" class="w-full mb-3 px-4 py-3 bg-white/10 border border-white/20 rounded-xl placeholder-white/60" />
-      <input v-model="booking.date" type="date" class="w-full mb-4 px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white" />
+      <input v-if="!store || !store.userName" v-model="booking.name" type="text" placeholder="Ваше ім’я" class="w-full mb-3 px-4 py-3 bg-white/10 border border-white/20 rounded-xl placeholder-white/60" />
+      <input v-if="!store || store.userPhone === ''" v-model="booking.phone" type="text" placeholder="Номер телефону" class="w-full mb-3 px-4 py-3 bg-white/10 border border-white/20 rounded-xl placeholder-white/60" />
+      <VueDatePicker v-model="booking.date" class="bg-neutral-600 rounded-md mt-1 mb-4" dark :min-date="new Date()" :disabled-dates="disabledDates" />
 
       <div class="flex justify-end gap-3">
         <button @click="showBooking = false" class="px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-white hover:bg-white/20 transition">
           Скасувати
         </button>
-        <button @click="submitBooking" class="px-4 py-2 rounded-xl bg-blue-600/40 hover:bg-blue-600/60 text-white transition">
+        <button @click="handleSubmitBooking" class="px-4 py-2 rounded-xl bg-blue-600/40 hover:bg-blue-600/60 text-white transition">
           Підтвердити
         </button>
       </div>
@@ -257,16 +260,34 @@
 
 <script setup>
 import { useRoute } from "vue-router";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, useTemplateRef, computed } from "vue";
+import {onClickOutside} from '@vueuse/core'
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
+import { differenceInYears } from 'date-fns';
 
 const route = useRoute();
 const photographer = ref(null);
 const showBooking = ref(false);
 const store = useUserStore();
-const booking = ref({ name: "", phone: "", date: "" });
+const booking = ref({ 
+  name: "", 
+  phone: "", 
+  date: "" 
+});
 const isOwn = ref(false);
 const isEditing = ref(false);
 const reviewError = ref(null);
+const modalWindow = useTemplateRef('modalWindow')
+const disabledDates = computed(() => {
+  let dates = []
+  for(let i = 0; i < photographer.value.bookings.length; i++) {
+    dates.push(photographer.value.bookings[i].date)
+  }
+
+  return dates
+})
+
 
 const editForm = ref({
   name: "",
@@ -281,46 +302,25 @@ const reviewForm = ref({
   rating: null,
 });
 
-const formatPhotographerStats = (orders, years) => {
-  const pluralize = (n, forms) => {
-    const mod10 = n % 10;
-    const mod100 = n % 100;
-    if (mod10 === 1 && mod100 !== 11) return forms[0];
-    if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20))
-      return forms[1];
-    return forms[2];
-  };
-  const orderText = pluralize(orders || 0, [
-    "замовлення",
-    "замовлення",
-    "замовлень",
-  ]);
-  const yearText = pluralize(years || 0, ["рік", "роки", "років"]);
-  return `📷 ${orders || 0} ${orderText} • 💼 ${
-    years || 0
-  } ${yearText} досвіду`;
-};
-
-const submitBooking = async () => {
+const handleSubmitBooking = async () => {
   try {
-    const res = await fetch("/api/booking", {
+    const res = await $fetch("/api/booking", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        ...booking.value,
+        name: (store && store.userName) ? store.userName : booking.value.name,
+        phone: (store && store.userPhone) ? store.userPhone : booking.value.phone,
+        date: new Date(booking.value.date).toISOString(),
         photographerId: route.params.id,
+        userId: store.userId
       }),
     });
-    if (res.ok) {
-      alert("Запит відправлено!");
       showBooking.value = false;
       booking.value = { name: "", phone: "", date: "" };
-    } else {
-      alert("Помилка при бронюванні");
-    }
+      photographer.value = res.photographer
   } catch (err) {
     console.error(err);
-    alert("Сервер недоступний");
+    alert(err);
   }
 };
 
@@ -496,6 +496,7 @@ const formTotalRating = async (allRatings) => {
 }
 
 onMounted(async () => {
+  
   try {
     const res = await fetch(`/api/photographers/${route.params.id}`);
     if (!res.ok) throw new Error("Фотограф не знайдений");
@@ -533,6 +534,8 @@ onMounted(async () => {
   } catch (err) {
     console.error(err);
   }
+
+  onClickOutside(modalWindow, event => showBooking.value = false)
 });
 </script>
 
