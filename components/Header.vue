@@ -139,7 +139,6 @@ const links = computed(() => {
 
   if (store.userRole === "admin") {
     allLinks.push({ path: "/admin", title: "АДМІН ПАНЕЛЬ" });
-    allLinks.push({ path: "/add-photographer", title: "ДОДАТИ ФОТОГРАФА" });
   }
 
   return allLinks;
