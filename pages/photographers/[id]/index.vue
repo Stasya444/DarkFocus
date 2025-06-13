@@ -167,6 +167,7 @@
         </p>
       </div>
 
+      <!-- Статистика -->
       <div class="flex mx-auto w-fit justify-center gap-5 text-md font-medium">
         <p v-if="photographer.bookings" class="text-sm text-gray-400">
           💼 {{ photographer.bookings.length }} замовлень
@@ -180,6 +181,7 @@
         </p>
       </div>
 
+      <!-- Фото -->
       <div class="mt-6 grid grid-cols-2 md:grid-cols-3 gap-4">
         <img
           v-for="(photo, i) in photographer.photos"
@@ -190,6 +192,7 @@
         />
       </div>
 
+      <!-- Кнопка бронювання -->
       <div class="mt-10 text-center">
         <button
           @click="showBooking = true"
@@ -200,6 +203,7 @@
       </div>
     </div>
 
+    <!-- Відгуки -->
     <div
       class="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 shadow-2xl max-w-4xl w-full"
     >
