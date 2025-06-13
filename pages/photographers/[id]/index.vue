@@ -1,171 +1,169 @@
 <template>
-  <div v-if="!photographer" class="min-h-screen flex items-center justify-center bg-black text-white text-xl">
-        <div
-      class="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 shadow-2xl max-w-4xl w-full"
-    >
-      <h1 class="text-3xl font-light text-white mb-4 text-center">
-        <div class="w-1/2 bg-neutral-600 h-4 rounded-md flex mx-auto animate-pulse duration-200"></div>
+  <div v-if="!photographer" class="min-h-screen flex items-center justify-center bg-black text-white">
+    <div class="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-8 shadow-xl max-w-lg w-full">
+      <h1 class="text-4xl font-extralight text-center mb-6">
+        <div class="w-3/4 bg-neutral-600 h-5 rounded-full mx-auto animate-pulse"></div>
       </h1>
-
-      <div class="flex justify-center mb-6">
-        <div class="w-36 h-36 rounded-full bg-neutral-600 animate-pulse duration-200"></div>
+      <div class="flex justify-center mb-8">
+        <div class="w-40 h-40 rounded-full bg-neutral-600 animate-pulse"></div>
       </div>
-
-      <div class="text-center space-y-2 text-white/80 mb-6 flex flex-col">
-        <div class="my-2">
-          <div class="w-1/2 bg-neutral-600 h-4 rounded-md flex mx-auto animate-pulse duration-200"></div>
-        </div>
-        <div class="my-2">
-          <div class="w-1/3 bg-neutral-600 h-4 rounded-md flex mx-auto animate-pulse duration-200"></div>
-        </div>
-        <div class="my-2">
-          <div class="w-1/3 bg-neutral-600 h-4 rounded-md flex mx-auto animate-pulse duration-200"></div>
-        </div>
-        <!-- <p v-if="photographer" class="text-lg">{{ photographer.name }}</p>
-        <p v-if="photographer" class="text-lg">Ціна: {{ photographer.price }} грн</p>
-        <LazyNuxtLink v-if="user.role !== 'guest' && photographer" :to="'/photographers/'+photographer.id" class="text-gray-400 hover:text-white duration-200">Перейти до профілю фотографа</LazyNuxtLink>
-        <button @click="isCreatingPhotographer = true" v-if="user.id == store.userId && store.userRole != 'guest' && !photographer" to="/" class="text-gray-400 hover:text-white duration-200">Створити профіль фотографа</button> -->
+      <div class="space-y-3 text-center">
+        <div class="w-2/3 bg-neutral-600 h-4 rounded-full mx-auto animate-pulse"></div>
+        <div class="w-1/2 bg-neutral-600 h-4 rounded-full mx-auto animate-pulse"></div>
+        <div class="w-1/3 bg-neutral-600 h-4 rounded-full mx-auto animate-pulse"></div>
       </div>
     </div>
   </div>
 
-  <div
-    v-else
-    class="min-h-screen bg-gradient-to-br from-black to-gray-900 p-10 flex flex-col gap-2 items-center justify-center"
-  >
-    <div
-      class="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 shadow-2xl max-w-4xl w-full"
-    >
-    <!-- Адмін кнопки -->
-    <div v-if="store.userRole == 'admin'" class="flex justify-center items-center">
-      <button
-          v-if="!photographer.isVerified"
-          @click="handleVerifyProfile"
-          class="px-6 py-2 flex mb-5 text-white bg-green-300/30 hover:bg-green-300/50 rounded-full border border-green-300/40 shadow-lg transition"
-        >
-        Верифікувати
-        </button>
-        <button
-          v-if="photographer.isVerified"
-          @click="handleDeverifyProfile"
-          class="px-6 py-2 flex mb-5 text-white bg-red-300/30 hover:bg-red-300/50 rounded-full border border-red-300/40 shadow-lg transition"
-        >
-        Деверифікувати
-        </button>
-    </div>
-    <!-- Кнопки фотографа -->
-      <div class="flex mx-auto w-fit gap-2" v-if="isOwn">
-        <button
-          v-if="!isEditing"
-          @click="handleEditProfile"
-          class="px-6 py-2 flex mb-5 text-white bg-gray-600/30 hover:bg-gray-600/50 rounded-full border border-gray-400/40 shadow-lg transition"
-        >
-        Редагувати
-        </button>
-        <template v-else>
+  <div v-else class="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto space-y-8">
+      <div class="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-8 shadow-xl">
+        <div v-if="store.userRole == 'admin'" class="flex justify-center gap-4 mb-6">
           <button
-          @click="handleUpdateProfile"
-          class="px-6 py-2 flex mb-5 text-white bg-blue-300/30 hover:bg-blue-300/50 rounded-full border border-blue-300/40 shadow-lg transition"
+              v-if="!photographer.isVerified"
+              @click="handleVerifyProfile"
+              class="px-6 py-2 bg-green-500/20 hover:bg-green-500/30 text-white rounded-full border border-green-500/30 shadow-md transition-all duration-300"
+          >
+            Верифікувати
+          </button>
+          <button
+              v-if="photographer.isVerified"
+              @click="handleDeverifyProfile"
+              class="px-6 py-2 bg-red-500/20 hover:bg-red-500/30 text-white rounded-full border border-red-500/30 shadow-md transition-all duration-300"
+          >
+            Деверифікувати
+          </button>
+        </div>
+
+        <h1 v-if="!isEditing" class="text-4xl font-extralight text-white text-center mb-4">
+          {{ photographer.name }}
+        </h1>
+        <input
+            v-else
+            v-model="editForm.name"
+            type="text"
+            class="text-4xl font-extralight text-white text-center bg-transparent border-b border-white/20 w-full py-2 mb-4 focus:outline-none focus:border-white/40"
         >
-        Зберегти
-        </button>
-        <button
-          @click="handleEditProfile"
-          class="px-6 py-2 flex mb-5 text-white bg-neutral-300/30 hover:bg-neutral-300/50 rounded-full border border-neutral-300/40 shadow-lg transition"
-        >
-        Відмінити
-        </button>
-        </template>
-      </div>
+        <div v-if="!photographer.isVerified" class="text-center mb-4">
+          <span class="text-red-400 text-sm font-medium">Фотограф не верифікований</span>
+        </div>
+        <div v-if="photographer.totalRating" class="flex justify-center gap-2 mb-6">
+          <span class="text-yellow-400 text-lg">★</span>
+          <span class="text-white font-semibold">{{ +photographer.totalRating.toFixed(2) }}</span>
+        </div>
 
-      <h1 v-if="!isEditing" class="text-3xl font-light text-white mb-2 text-center">
-        {{ photographer.name }}
-      </h1>
-      <input v-else class="text-3xl font-light text-white mb-2 text-center border mx-auto flex" v-model="editForm.name" type="text">
-      <div v-if="!photographer.isVerified" class="flex mx-auto mb-4 justify-center w-full">
-        <span class="text-red-400 text-sm text-center">Фотограф не верифікований</span>
-      </div>
-      <div v-if="photographer.totalRating" class="flex mx-auto w-fit gap-2 mt-2 mb-4 text-md">
-        <span class="text-yellow-400">
-          ★
-        </span>
-        <span class="text-gray-400 font-bold justify-center">
-          {{ +photographer.totalRating.toFixed(2) }}
-        </span>
-      </div>
+        <div class="flex justify-center mb-8">
+          <img
+              :src="photographer.avatar"
+              class="w-40 h-40 rounded-full object-cover border-2 border-white/20 shadow-lg"
+          />
+        </div>
 
-      <!-- Аватар -->
-      <div class="flex justify-center mb-6">
-        <img :src="photographer.avatar" class="w-36 h-36 rounded-full object-cover border-2 border-white/30 shadow-lg" />
-      </div>
+        <div class="text-center space-y-4 mb-8">
+          <p v-if="!isEditing" class="text-lg italic text-white/80">
+            “{{ photographer.about }}”
+          </p>
+          <textarea
+              v-else
+              v-model="editForm.about"
+              class="w-full bg-white/10 border border-white/20 rounded-lg p-3 text-white placeholder-white/50 focus:outline-none focus:border-white/40"
+          ></textarea>
+          <p v-if="!isEditing" class="text-lg text-white/80">
+            📍 {{ photographer.city }} • 🎭 {{ photographer.style }} • 💵 {{ photographer.price }}₴
+          </p>
+          <div v-else class="flex flex-col sm:flex-row gap-3 justify-center">
+            <input
+                type="text"
+                v-model="editForm.city"
+                placeholder="Місто"
+                class="bg-white/10 border border-white/20 rounded-lg p-2 text-white focus:outline-none focus:border-white/40"
+            >
+            <input
+                type="text"
+                v-model="editForm.style"
+                placeholder="Стиль"
+                class="bg-white/10 border border-white/20 rounded-lg p-2 text-white focus:outline-none focus:border-white/40"
+            >
+            <input
+                type="text"
+                v-model="editForm.price"
+                placeholder="Ціна"
+                class="bg-white/10 border border-white/20 rounded-lg p-2 text-white focus:outline-none focus:border-white/40"
+            >
+          </div>
+        </div>
 
-      <div class="text-center space-y-2 text-white/80 mb-6">
-        <p v-if="!isEditing" class="text-lg italic opacity-80">“{{ photographer.about }}”</p>
-        <textarea v-else v-model="editForm.about" class="border px-2 py-1 rounded-lg"></textarea>
-        <p v-if="!isEditing">
-          📍 {{ photographer.city }} • 🎭 {{ photographer.style }} • 💵
-          {{ photographer.price }}₴
-        </p>
-        <p v-else>
-          📍 <input type="text" class="border px-2 py-1 rounded-md" v-model="editForm.city"> • 🎭 <input type="text" class="border px-2 py-1 rounded-md" v-model="editForm.style"> • 💵
-          <input type="text" class="border px-2 py-1 rounded-md" v-model="editForm.price">₴
-        </p>
-      </div>
+        <div class="flex justify-center gap-6 text-sm text-white/70 mb-8">
+          <p v-if="photographer.bookings">💼 {{ photographer.bookings.length }} замовлень</p>
+          <p>🕒 {{ differenceInYears(new Date(), new Date(photographer.createdAt)) }} років з нами</p>
+        </div>
 
-      <!-- Статистика -->
-      <div class="flex mx-auto w-fit justify-center gap-5 text-md font-medium">
-        <p  v-if="photographer.bookings" class="text-sm text-gray-400">💼 {{ photographer.bookings.length }} замовлень</p>
-        <p class="text-sm text-gray-400">🕒 {{ differenceInYears(new Date(), new Date(photographer.createdAt)) }} років з нами</p>
-      </div>
-
-      <!-- Фото -->
-      <div class="mt-6 grid grid-cols-2 md:grid-cols-3 gap-4">
-        <img
-            v-for="(photo, i) in photographer.photos"
-            :key="i"
-            :src="photo.url"
-            class="rounded-xl object-cover w-full h-40 hover:scale-105 transition-transform duration-300 cursor-pointer shadow-md"
-            @click="openPhoto(i)"
-        />
-      </div>
-
-
-      <!-- Кнопка бронювання -->
-      <div class="mt-10 text-center">
-        <button
-            @click="showBooking = true"
-            class="px-6 py-3 bg-blue-600/30 hover:bg-blue-600/50 text-white rounded-full border border-blue-400/40 shadow-lg transition"
-        >
-          📅 Забронювати
-        </button>
-      </div>
-    </div>
-
-    <!-- Відгуки -->
-    <div
-      class="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 shadow-2xl max-w-4xl w-full"
-    >
-      <h1 class="text-xl text-white mb-2 font-medium">Відгуки</h1>
-      <hr class="border-white/10 mb-3" />
-      <div v-if="store.isLoggedIn" class="flex flex-col gap-2 items-start justify-start w-full">
-          <h2 class="text-md text-white mb-1 font-light">Залишити відгук</h2>
-          <div class="stars">
-            <label
-              v-for="i in 5"
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          <img
+              v-for="(photo, i) in photographer.photos"
               :key="i"
-              class="cursor-pointer text-2xl transition-colors"
-              :for="'star-' + i"
+              :src="photo.url"
+              class="rounded-lg object-cover w-full h-48 hover:scale-105 transition-transform duration-300 cursor-pointer shadow-md"
+              @click="openPhoto(i)"
+          />
+        </div>
+
+        <div v-if="isOwn" class="flex justify-center gap-4 mt-10">
+          <button
+              v-if="!isEditing"
+              @click="handleEditProfile"
+              class="px-6 py-2 bg-gray-500/20 hover:bg-gray-500/30 text-white rounded-full border border-gray-500/30 shadow-md transition-all duration-300"
+          >
+            Редагувати
+          </button>
+          <template v-else>
+            <button
+                @click="handleUpdateProfile"
+                class="px-6 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-white rounded-full border border-blue-500/30 shadow-md transition-all duration-300"
+            >
+              Зберегти
+            </button>
+            <button
+                @click="handleEditProfile"
+                class="px-6 py-2 bg-neutral-500/20 hover:bg-neutral-500/30 text-white rounded-full border border-neutral-500/30 shadow-md transition-all duration-300"
+            >
+              Відмінити
+            </button>
+          </template>
+        </div>
+
+        <div class="mt-6 text-center">
+          <button
+              @click="showBooking = true"
+              class="px-8 py-3 bg-neutral-500/20 hover:bg-neutral-500/30 text-white rounded-full border border-neutral-500/30 shadow-md transition-all duration-300"
+          >
+            📅 Забронювати
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-8 shadow-xl">
+        <h1 class="text-2xl text-white font-semibold mb-4">Відгуки</h1>
+        <hr class="border-white/20 mb-6" />
+        <div v-if="store.isLoggedIn" class="space-y-4 mb-6">
+          <h2 class="text-lg text-white font-light">Залишити відгук</h2>
+          <div class="flex gap-1">
+            <label
+                v-for="i in 5"
+                :key="i"
+                class="cursor-pointer text-2xl transition-colors"
+                :for="'star-' + i"
             >
               <input
-                type="radio"
-                :id="'star-' + i"
-                name="star"
-                :value="i"
-                v-model="reviewForm.rating"
-                class="hidden"
+                  type="radio"
+                  :id="'star-' + i"
+                  name="star"
+                  :value="i"
+                  v-model="reviewForm.rating"
+                  class="hidden"
               />
               <span
-                :class="{
+                  :class="{
                   'text-yellow-400': reviewForm.rating >= i,
                   'text-gray-400': reviewForm.rating < i
                 }"
@@ -173,85 +171,120 @@
             </label>
           </div>
           <textarea
-            v-model="reviewForm.comment"
-            placeholder="Ваш коментар"
-            class="w-full px-4 py-3 bg-white/10 border border-white/20 text-white rounded-xl placeholder-white/50"></textarea>
-            <button @click="handleSubmitReview" class="px-6 py-2 flex text-white bg-neutral-300/30 hover:bg-neutral-300/50 rounded-full border border-neutral-300/40 shadow-lg transition">
-              Коментувати
-            </button>
-            <span v-if="reviewError" class="text-red-400 text-sm">{{ reviewError }}</span>
-      </div>
-      <h3 class="text-gray-400" v-else>Зареєструйтесь, щоб залишати відгуки</h3>
-      <template v-if="photographer.ratings">
-        <div
-          v-for="review in [...photographer.ratings].sort((a, b) => b.id - a.id)"
-          :key="review.id"
-          class="bg-white/10 p-3 rounded-md text-white/80 flex justify-between mt-3"
-        >
-        <div v-if="review" class="flex flex-col gap-1">
-          <!-- Дата і час -->
-          <span class="text-xs text-gray-400 mb-2">{{ new Date(review.createdAt).toLocaleTimeString() }} {{ new Date(review.createdAt).toLocaleDateString() }}</span>
-          <span v-if="review.author" class="text-md"><LazyNuxtLink :title="'Перейти до профілю користувача '+ review.author.name" class="hover:underline" :to="'/user/'+review.author.id">{{ review.author.name }}</LazyNuxtLink></span>
-          <span class="text-sm my-1">{{ review.comment }}</span>
-          <span class="text-xs text-blue-400 mt-1">
-            <label
-                v-for="i in 5"
-                :key="i"
-                class="cursor-pointer text-2xl transition-colors"
-                :for="'star-' + i"
-              >
-                <input
-                  type="radio"
-                  :id="'star-' + i"
-                  name="star"
-                  :value="i"
-                  disabled
-                  :checked="i == review.rating"
-                  class="hidden"
-                />
-                <span
-                  :class="{
-                    'text-yellow-400': review.rating >= i,
-                    'text-gray-400': review.rating < i
-                  }"
-                >★</span>
-              </label>
-          </span>
-
+              v-model="reviewForm.comment"
+              placeholder="Ваш коментар"
+              class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-white/40"
+          ></textarea>
+          <button
+              @click="handleSubmitReview"
+              class="px-6 py-2 bg-neutral-500/20 hover:bg-neutral-500/30 text-white rounded-full border border-neutral-500/30 shadow-md transition-all duration-300"
+          >
+            Коментувати
+          </button>
+          <span v-if="reviewError" class="text-red-400 text-sm">{{ reviewError }}</span>
         </div>
+        <h3 v-else class="text-gray-400">Зареєструйтесь, щоб залишати відгуки</h3>
+        <template v-if="photographer.ratings">
+          <div
+              v-for="review in [...photographer.ratings].sort((a, b) => b.id - a.id)"
+              :key="review.id"
+              class="bg-white/5 p-4 rounded-lg text-white/80 flex justify-between mt-4"
+          >
+            <div class="space-y-2">
+              <span class="text-xs text-gray-400">
+                {{ new Date(review.createdAt).toLocaleTimeString() }} {{ new Date(review.createdAt).toLocaleDateString() }}
+              </span>
+              <span v-if="review.author" class="text-md">
+                <LazyNuxtLink
+                    :title="'Перейти до профілю користувача ' + review.author.name"
+                    class="hover:underline"
+                    :to="'/user/' + review.author.id"
+                >
+                  {{ review.author.name }}
+                </LazyNuxtLink>
+              </span>
+              <span class="text-sm">{{ review.comment }}</span>
+              <div class="flex gap-1">
+                <label
+                    v-for="i in 5"
+                    :key="i"
+                    class="cursor-pointer text-xl"
+                    :for="'star-' + i"
+                >
+                  <input
+                      type="radio"
+                      :id="'star-' + i"
+                      name="star"
+                      :value="i"
+                      disabled
+                      :checked="i == review.rating"
+                      class="hidden"
+                  />
+                  <span
+                      :class="{
+                      'text-yellow-400': review.rating >= i,
+                      'text-gray-400': review.rating < i
+                    }"
+                  >★</span>
+                </label>
+              </div>
+            </div>
             <button
-            v-if="store.userRole === 'admin'"
-            @click="handleDeleteReview(review.id)"
-            class="text-red-400 hover:text-red-300 hover:cursor-pointer text-xs transition"
+                v-if="store.userRole === 'admin'"
+                @click="handleDeleteReview(review.id)"
+                class="text-red-400 hover:text-red-300 text-xs transition-all duration-300"
             >
-          Видалити
+              Видалити
             </button>
-        </div>
-      </template>
+          </div>
+        </template>
+      </div>
     </div>
-  </div>
 
-  <!-- Модальне вікно бронювання -->
-  <div
-    v-if="showBooking"
-    class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
-  >
     <div
-      ref="modalWindow"
-      class="bg-neutral-900 p-6 rounded-xl w-full max-w-md text-black relative text-white">
-      <h3 class="text-xl mb-4 text-center font-semibold">Бронювання</h3>
-
-      <input v-if="!store || !store.userName" v-model="booking.name" type="text" placeholder="Ваше ім’я" class="w-full mb-3 px-4 py-3 bg-white/10 border border-white/20 rounded-xl placeholder-white/60" />
-      <input v-if="!store || store.userPhone === ''" v-model="booking.phone" type="text" placeholder="Номер телефону" class="w-full mb-3 px-4 py-3 bg-white/10 border border-white/20 rounded-xl placeholder-white/60" />
-      <VueDatePicker v-model="booking.date" class="bg-neutral-600 rounded-md mt-1 mb-4" dark :min-date="new Date()" :disabled-dates="disabledDates" />
-
-      <div class="flex justify-end gap-3">
-        <button @click="showBooking = false" class="px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-white hover:bg-white/20 transition">
-          Скасувати
-        </button>
-        <button @click="handleSubmitBooking" class="px-4 py-2 rounded-xl bg-blue-600/40 hover:bg-blue-600/60 text-white transition">
-          Підтвердити
-        </button>
+        v-if="showBooking"
+        class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50"
+    >
+      <div
+          ref="modalWindow"
+          class="bg-neutral-900 p-8 rounded-2xl w-full max-w-md text-white shadow-xl"
+      >
+        <h3 class="text-2xl font-semibold text-center mb-6">Бронювання</h3>
+        <input
+            v-if="!store || !store.userName"
+            v-model="booking.name"
+            type="text"
+            placeholder="Ваше ім’я"
+            class="w-full mb-4 px-4 py-3 bg-white/10 border border-white/20 rounded-lg placeholder-white/60 focus:outline-none focus:border-white/40"
+        />
+        <input
+            v-if="!store || store.userPhone === ''"
+            v-model="booking.phone"
+            type="text"
+            placeholder="Номер телефону"
+            class="w-full mb-4 px-4 py-3 bg-white/10 border border-white/20 rounded-lg placeholder-white/60 focus:outline-none focus:border-white/40"
+        />
+        <VueDatePicker
+            v-model="booking.date"
+            class="bg-neutral-600 rounded-lg mt-1 mb-6"
+            dark
+            :min-date="new Date()"
+            :disabled-dates="disabledDates"
+        />
+        <div class="flex justify-end gap-4">
+          <button
+              @click="showBooking = false"
+              class="px-6 py-2 bg-white/10 border border-white/20 rounded-lg text-white hover:bg-white/20 transition-all duration-300"
+          >
+            Скасувати
+          </button>
+          <button
+              @click="handleSubmitBooking"
+              class="px-6 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/30 rounded-lg text-white transition-all duration-300"
+          >
+            Підтвердити
+          </button>
+        </div>
       </div>
     </div>
   </div>
