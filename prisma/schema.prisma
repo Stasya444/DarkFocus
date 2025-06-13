@@ -28,20 +28,22 @@ model User {
 }
 
 model Photographer {
-  id          Int       @id @default(autoincrement())
-  name        String    @unique
-  city        String?
-  style       String?
-  price       Int?
-  about       String?
-  avatar      String?
-  isVerified  Boolean   @default(false)
-  createdAt   DateTime  @default(now())
-  user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      Int
-  photos      Photo[]
-  ratings     Rating[]
-  bookings    Booking[]
+  id           Int        @id @default(autoincrement())
+  name         String     @unique
+  city         String?
+  style        String?
+  price        Int?
+  about        String?
+  experience   Int?
+  avatar       String?
+  ordersCount  Int        @default(0)
+  isVerified   Boolean    @default(false)
+  createdAt    DateTime   @default(now())
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       Int
+  photos       Photo[]
+  ratings      Rating[]
+  bookings     Booking[]
 }
 
 model Photo {

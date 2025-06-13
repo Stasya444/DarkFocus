@@ -10,68 +10,77 @@ export default defineEventHandler(async (event) => {
     if (!form) {
       throw createError({
         statusCode: 400,
-        statusMessage: "Форма не надійшла"
+        statusMessage: "Форма не надійшла",
       });
     }
+
     const fields: Record<string, any> = {};
     const photos: { filename: string; data: Buffer; type: string }[] = [];
 
-    for (const item of form) {
+    for (const item of form as Array<{
+      type: string;
+      name: string;
+      data: Buffer;
+      filename?: string;
+      mimetype?: string;
+    }>) {
       if (item.type === "file") {
-      photos.push({
-        filename: item.filename,
-        data: item.data,
-        type: item.mimetype
-      });
+        photos.push({
+          filename: item.filename ?? "unnamed.jpg",
+          data: item.data,
+          type: item.mimetype ?? "application/octet-stream",
+        });
       } else {
-      fields[item.name] = item.data;
+        fields[item.name] = item.data;
       }
     }
 
-    // Валидация числовых полей
+    // ✅ Тут усе вже ПОЗА циклом for!
+
+    // Валідація
     if (isNaN(Number(Buffer.from(fields.price).toString()))) {
       throw createError({
         statusCode: 400,
-        statusMessage: "Ціна має бути числом"
+        statusMessage: "Ціна має бути числом",
       });
     }
 
     if (Number(Buffer.from(fields.price).toString()) < 0) {
       throw createError({
         statusCode: 400,
-        statusMessage: "Ціна не може бути від'ємною"
+        statusMessage: "Ціна не може бути від'ємною",
       });
     }
 
     if (isNaN(Number(Buffer.from(fields.userId).toString()))) {
       throw createError({
         statusCode: 400,
-        statusMessage: "Невірний ідентифікатор користувача"
+        statusMessage: "Невірний ідентифікатор користувача",
       });
     }
 
+    const fullName = `${Buffer.from(fields.firstName).toString()} ${Buffer.from(
+      fields.lastName
+    ).toString()}`.trim();
 
-    const fullName = `${Buffer.from(fields.firstName).toString()} ${Buffer.from(fields.lastName).toString()}`.trim();
-
-    // Проверка уникальности
+    // Перевірка наявності
     const existing = await prisma.photographer.findFirst({
       where: {
-        OR: [
-          { userId: Number(fields.userId) }
-        ]
-      }
+        OR: [{ userId: Number(fields.userId) }],
+      },
     });
 
     if (existing) {
       throw createError({
         statusCode: 400,
-        statusMessage: existing.name === fullName 
-          ? "Фотограф з таким іменем вже існує" 
-          : "Ви вже створили анкету фотографа"
+        statusMessage:
+          existing.name === fullName
+            ? "Фотограф з таким іменем вже існує"
+            : "Ви вже створили анкету фотографа",
       });
     }
 
-    // Создание фотографа
+    // Створення
     const photographer = await prisma.photographer.create({
       data: {
         name: fullName,
@@ -90,17 +99,16 @@ export default defineEventHandler(async (event) => {
       id: photographer.id,
       uploadedPhotos: photos.length,
     };
-
   } catch (error: any) {
-    console.error('Error in photographer submission:', error);
-    
+    console.error("Error in photographer submission:", error);
+
     if (error.statusCode) {
       throw error;
     }
-    
+
     throw createError({
       statusCode: 500,
-      statusMessage: "Внутрішня помилка сервера"
+      statusMessage: "Внутрішня помилка сервера",
     });
   }
 });

@@ -7,7 +7,6 @@
         Кращі роботи тижня
       </h2>
 
-      <!-- Галерея -->
       <div
         v-if="isLoaded"
         class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
@@ -17,14 +16,12 @@
           :key="index"
           class="relative group overflow-hidden rounded-lg aspect-square bg-white/5 backdrop-blur-md border border-white/10 shadow-xl hover:shadow-2xl transition-shadow duration-300"
         >
-          <!-- Фото -->
           <img
             :src="photo.url"
             :alt="photo.title"
             class="block w-full h-full object-cover transition-all duration-500 group-hover:brightness-50"
           />
 
-          <!-- Текст з'являється при наведенні -->
           <div
             v-if="photo.title"
             class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500"
@@ -36,7 +33,6 @@
         </div>
       </div>
 
-      <!-- Кнопка -->
       <div class="text-center mt-12">
         <NuxtLink
           to="/photographers"

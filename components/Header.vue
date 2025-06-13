@@ -1,21 +1,17 @@
 <template>
   <header class="sticky top-0 z-50 border-b border-white/20 shadow-xl">
-    <!-- Фон с прозрачностью и размытием -->
     <div
       class="absolute inset-0 backdrop-blur-lg bg-white/10 pointer-events-none"
       aria-hidden="true"
     ></div>
 
-    <!-- Контент хедера -->
     <div
       class="relative container mx-auto max-w-7xl px-4 py-3 flex items-center justify-between"
     >
-      <!-- Логотип -->
       <NuxtLink to="/" class="flex items-center flex-shrink-0 z-10">
         <span class="text-xl font-bold text-white">DarkFocus</span>
       </NuxtLink>
 
-      <!-- Навигация -->
       <nav class="hidden md:flex items-center justify-center flex-1 mx-8 z-10">
         <div class="flex space-x-6">
           <NuxtLink
@@ -35,7 +31,14 @@
 
       <div class="hidden md:flex items-center space-x-3 z-10">
         <template v-if="store.isLoggedIn">
-          <span class="text-white text-sm">Привіт, <LazyNuxtLink class="hover:underline text-neutral-400" :to="'/user/'+store.userId">{{store.userName}}</LazyNuxtLink></span>
+          <span class="text-white text-sm"
+            >Привіт,
+            <LazyNuxtLink
+              class="hover:underline text-neutral-400"
+              :to="'/user/' + store.userId"
+              >{{ store.userName }}</LazyNuxtLink
+            ></span
+          >
           <button
             @click="logout"
             class="px-4 py-2 rounded-md border border-white/40 text-white text-sm font-medium hover:bg-white/20 transition-all duration-300"
@@ -100,7 +103,14 @@
               </button>
             </template>
             <template v-else>
-              <div class="text-white text-sm">Привіт, <LazyNuxtLink class="hover:underline text-neutral-400" :to="'/user/'+store.userId">{{store.userName}}</LazyNuxtLink></div>
+              <div class="text-white text-sm">
+                Привіт,
+                <LazyNuxtLink
+                  class="hover:underline text-neutral-400"
+                  :to="'/user/' + store.userId"
+                  >{{ store.userName }}</LazyNuxtLink
+                >
+              </div>
               <button
                 @click="logout"
                 class="w-full mt-2 px-4 py-3 rounded-md border border-white/40 bg-white/20 text-white text-sm font-medium hover:bg-white/30 transition"
@@ -121,7 +131,7 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import AuthModal from "~/components/Modalka.vue";
-import {useUserStore} from "~/stores/user";
+import { useUserStore } from "~/stores/user";
 
 const isMenuOpen = ref(false);
 const showAuthModal = ref(false);
@@ -149,8 +159,6 @@ function logout() {
   store.logout();
   // navigateTo("/");
 }
-
-
 </script>
 
 <style scoped>

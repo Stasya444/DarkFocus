@@ -28,18 +28,15 @@
       />
     </div>
 
-    <!-- Инфо -->
     <div class="flex flex-wrap justify-between text-sm text-white/70 mb-4">
       <span>📆 {{ photographer.experience || 0 }} років досвіду</span>
       <span>📸 {{ photographer.ordersCount || 0 }} замовлень</span>
     </div>
 
-    <!-- Описание -->
     <p class="text-sm text-white/80 mb-5">
       {{ photographer.about || "Опис не вказано" }}
     </p>
 
-    <!-- Цена -->
     <div class="flex justify-between items-center mb-6">
       <span class="text-lg font-semibold text-white">
         {{ photographer.price }} ₴ / год
@@ -52,7 +49,6 @@
       </NuxtLink>
     </div>
 
-    <!-- Кнопки действий -->
     <div class="grid sm:grid-cols-3 gap-3 mb-4">
       <button
         class="bg-[#a8996e] hover:bg-[#8a7d56] text-white py-2 rounded-xl text-sm font-medium transition-all"

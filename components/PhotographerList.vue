@@ -16,10 +16,19 @@
           class="px-4 py-2 rounded text-sm bg-white/10 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-white/30"
         >
           <option value="">Будь-який стиль</option>
-          <option value="Весілля">Весілля</option>
-          <option value="Портрет">Портрет</option>
-          <option value="Сімейна">Сімейна</option>
-          <option value="Фешн">Фешн</option>
+          <option value="Wedding">Wedding</option>
+          <option value="Portrait">Portrait</option>
+          <option value="Family">Family</option>
+          <option value="Fashion">Fashion</option>
+          <option value="Street">Street</option>
+          <option value="Studio">Studio</option>
+          <option value="Nature">Nature</option>
+          <option value="Reportage">Reportage</option>
+          <option value="Newborn">Newborn</option>
+          <option value="Travel">Travel</option>
+          <option value="Artistic">Artistic</option>
+          <option value="Event">Event</option>
+          <option value="Commercial">Commercial</option>
         </select>
 
         <select
@@ -90,7 +99,6 @@ option {
 }
 </style>
 
-
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import PhotographerCard from "~/components/PhotographerCard.vue";
@@ -110,7 +118,7 @@ onMounted(async () => {
     const data = await res.json();
     photographers.value = data;
   } catch (err) {
-    console.error("❌ Помилка:", err);
+    console.error("Помилка:", err);
     error.value = "Не вдалося завантажити фотографів";
   } finally {
     loading.value = false;

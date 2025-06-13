@@ -1,12 +1,11 @@
 <template>
   <div class="max-w-7xl mx-auto px-6 py-10 text-white">
-    <!-- Обкладинка -->
     <div
       class="relative rounded-xl overflow-hidden mb-10 shadow-xl"
       style="height: 350px"
     >
       <img
-        src="/img/slide1.jpg"
+        src="/uploads/slide1.jpg"
         alt="Фотографія обкладинки"
         class="absolute inset-0 w-full h-full object-cover opacity-30"
       />

@@ -7,7 +7,6 @@ export default defineEventHandler(async (event) => {
     const body = await readBody(event);
     const { name, email, phone, password, confirmPassword, role } = body;
 
-    // Валідація
     if (
       !name.trim() ||
       !email.trim() ||
@@ -16,7 +15,7 @@ export default defineEventHandler(async (event) => {
     ) {
       return { success: false, message: "Усі поля обов’язкові" };
     }
-    // Валідація email
+
     const emailRegex = /^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/gm; // username@domain.com
     if (!emailRegex.test(email)) {
       return {
@@ -31,14 +30,14 @@ export default defineEventHandler(async (event) => {
         message: "Телефон має починатися з +380 і містити 12 символів",
       };
     }
-    // Якщо пароль більше 24 символів
+
     if (password.trim().length < 6) {
       return {
         success: false,
         message: "Пароль має містити мінімум 6 символів",
       };
     }
-    // Якщо пароль більше 24 символів
+
     if (password.trim().length > 24) {
       return {
         success: false,
@@ -61,12 +60,10 @@ export default defineEventHandler(async (event) => {
       },
     });
 
-    // Генерація JWT токена
     const token = jwt.sign({ id: user.id, role: user.role }, "secret_key", {
       expiresIn: "7d",
     });
 
-    // Збереження токена в cookie
     setCookie(event, "token", token, {
       httpOnly: true,
       path: "/",

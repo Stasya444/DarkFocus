@@ -48,7 +48,7 @@
         required
         class="input-glass w-full mt-2"
       ></textarea>
-<!-- 
+      <!-- 
       <div>
         <label class="block mb-2 text-sm text-white/70">
           Завантажити фото
@@ -70,14 +70,13 @@
         >
           {{ loading ? "Збереження..." : "Зберегти" }}
         </button>
-        
 
         <transition name="fade">
           <div
             v-if="showSuccess"
             class="bg-green-500/10 text-green-300 px-4 py-2 rounded-xl border border-green-500/30 backdrop-blur-md"
           >
-            ✅ Успішно збережено!
+            Успішно збережено!
           </div>
         </transition>
 
@@ -119,7 +118,7 @@ function handleFiles(e) {
 
 async function handleSubmit() {
   if (loading.value) return;
-  
+
   loading.value = true;
   error.value = "";
   showSuccess.value = false;
@@ -154,7 +153,6 @@ async function handleSubmit() {
       showSuccess.value = false;
     }, 3000);
 
-    // Сброс формы
     form.value = {
       firstName: "",
       lastName: "",

@@ -76,7 +76,6 @@
         </button>
       </div>
 
-      <!-- Форма -->
       <form @submit.prevent="handleSubmit">
         <div class="gap-3 flex flex-col mb-6" v-if="isLogin">
           <div>
@@ -98,7 +97,6 @@
           </div>
         </div>
         <div class="gap-3 flex flex-col mb-6" v-else>
-          <!-- Імʼя -->
           <div>
             <input
               v-model="form.name"
@@ -108,7 +106,6 @@
             />
           </div>
 
-          <!-- Email -->
           <div>
             <input
               v-model="form.email"
@@ -120,7 +117,7 @@
 
           <div class="flex items-center">
             <input
-              v-if="(!form.phone.includes('+380') && !form.phone.includes('+'))"
+              v-if="!form.phone.includes('+380') && !form.phone.includes('+')"
               type="text"
               placeholder="+380"
               value="+380"
@@ -150,7 +147,6 @@
             />
           </div>
 
-          <!-- Підтвердження пароля -->
           <div>
             <input
               v-model="form.confirmPassword"
@@ -160,7 +156,6 @@
             />
           </div>
 
-          <!-- Вибір ролі -->
           <div>
             <span class="flex items-center gap-2 text-white/80">
               <input
@@ -174,7 +169,6 @@
           </div>
         </div>
 
-        <!-- Кнопка -->
         <button
           type="submit"
           class="w-full py-3 bg-white/40 hover:bg-white/50 text-white font-medium rounded-xl transition"
@@ -183,10 +177,8 @@
         </button>
       </form>
 
-      <!-- Повідомлення -->
       <p v-if="message" class="text-center text-red-400 mt-4">{{ message }}</p>
 
-      <!-- Нижній перемикач -->
       <p class="text-center mt-6 text-white/80">
         {{ isLogin ? "Немає акаунту?" : "Вже зареєстровані?" }}
         <button
@@ -226,7 +218,7 @@ function close() {
     password: "",
     confirmPassword: "",
     role: false,
-    phone: ""
+    phone: "",
   };
   message.value = "";
 }
@@ -281,7 +273,7 @@ async function handleSubmit() {
       message.value = res.message || "Сталася помилка";
     }
   } catch (err) {
-    console.error("❌ Помилка при авторизації:", err);
+    console.error("Помилка при авторизації:", err);
     message.value = "Помилка сервера";
   }
 }

@@ -3,7 +3,7 @@
     <div class="flex flex-col md:grid md:grid-cols-2 h-full">
       <div class="hidden md:block relative h-full">
         <img
-          src="/img/photo1.jpg"
+          src="/uploads/photo1.jpg"
           alt="Темна fashion фотографія"
           class="w-full h-full object-cover opacity-90"
         />
@@ -14,7 +14,7 @@
         class="relative flex flex-col justify-center items-start text-white px-8 py-16 md:px-16 md:py-0 min-h-[90vh] md:h-full overflow-hidden"
       >
         <img
-          src="/img/photo2.jpg"
+          src="/uploads/photo2.jpg"
           alt=""
           class="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-screen pointer-events-none"
         />
