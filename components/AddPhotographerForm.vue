@@ -48,7 +48,7 @@
         required
         class="input-glass w-full mt-2"
       ></textarea>
-      <!-- 
+
       <div>
         <label class="block mb-2 text-sm text-white/70">
           Завантажити фото
@@ -60,7 +60,7 @@
           @change="handleFiles"
           class="input-glass file:px-3 file:py-1 file:rounded-full file:border-0 file:bg-white/20 file:text-white hover:file:bg-white/30"
         />
-      </div> -->
+      </div>
 
       <div class="flex gap-3 mt-4 items-center flex-wrap">
         <button

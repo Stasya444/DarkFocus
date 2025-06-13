@@ -63,7 +63,7 @@
       <button
         class="bg-[#595246] hover:bg-[#3e3a2f] text-white py-2 rounded-xl text-sm font-medium transition-all"
       >
-        💌 Надіслати запит
+        Telegram
       </button>
     </div>
   </div>

@@ -16,7 +16,13 @@
         <p class="text-gray-400 text-lg">Поки що немає замовлень</p>
       </div>
 
-      <div v-if="store && store.userRole !== 'guest'" class="space-y-4">
+      <div
+        v-if="
+          store &&
+          (store.userRole === 'admin' || store.userRole === 'photographer')
+        "
+        class="space-y-4"
+      >
         <div
           v-for="order in bookings"
           :key="order.id"
@@ -90,7 +96,15 @@ const store = useUserStore();
 
 onMounted(async () => {
   try {
-    const response = await $fetch("/api/photographers/orders/" + store.userId);
+    let url = "/api/photographers/orders/";
+
+    if (store.userRole === "admin") {
+      url += store.userId;
+    } else {
+      url += store.userId;
+    }
+
+    const response = await $fetch(url);
     bookings.value = response.booking;
   } catch (error) {
     console.error("Error fetching orders:", error);

@@ -55,6 +55,7 @@ export default defineEventHandler(async (event) => {
       data: {
         name,
         email,
+        phone,
         password: hashedPassword,
         role: role ? "photographer" : "guest",
       },

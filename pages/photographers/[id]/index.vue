@@ -174,9 +174,7 @@
         </p>
         <p class="text-sm text-gray-400">
           🕒
-          {{
-            differenceInYears(new Date(), new Date(photographer.createdAt))
-          }}
+          {{ differenceInYears(new Date(), new Date(photographer.createdAt)) }}
           років з нами
         </p>
       </div>
@@ -327,19 +325,13 @@
       <h3 class="text-xl mb-4 text-center font-semibold">Бронювання</h3>
 
       <input
-        v-if="!store || !store.userName"
-        v-model="booking.name"
-        type="text"
-        placeholder="Ваше ім’я"
-        class="w-full mb-3 px-4 py-3 bg-white/10 border border-white/20 rounded-xl placeholder-white/60"
-      />
-      <input
         v-if="!store || store.userPhone === ''"
         v-model="booking.phone"
         type="text"
         placeholder="Номер телефону"
         class="w-full mb-3 px-4 py-3 bg-white/10 border border-white/20 rounded-xl placeholder-white/60"
       />
+
       <VueDatePicker
         v-model="booking.date"
         class="bg-neutral-600 rounded-md mt-1 mb-4"
@@ -347,6 +339,10 @@
         :min-date="new Date()"
         :disabled-dates="disabledDates"
       />
+
+      <p v-if="errorMessage" class="text-red-500 text-sm mb-3">
+        {{ errorMessage }}
+      </p>
 
       <div class="flex justify-end gap-3">
         <button
