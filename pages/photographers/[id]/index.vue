@@ -1,37 +1,37 @@
 <template>
   <div
-      v-if="!photographer"
-      class="min-h-screen flex items-center justify-center bg-black text-white text-xl"
+    v-if="!photographer"
+    class="min-h-screen flex items-center justify-center bg-black text-white text-xl"
   >
     <div
-        class="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 shadow-2xl max-w-4xl w-full"
+      class="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 shadow-2xl max-w-4xl w-full"
     >
       <h1 class="text-3xl font-light text-white mb-4 text-center">
         <div
-            class="w-1/2 bg-neutral-600 h-4 rounded-md flex mx-auto animate-pulse duration-200"
+          class="w-1/2 bg-neutral-600 h-4 rounded-md flex mx-auto animate-pulse duration-200"
         ></div>
       </h1>
 
       <div class="flex justify-center mb-6">
         <div
-            class="w-36 h-36 rounded-full bg-neutral-600 animate-pulse duration-200"
+          class="w-36 h-36 rounded-full bg-neutral-600 animate-pulse duration-200"
         ></div>
       </div>
 
       <div class="text-center space-y-2 text-white/80 mb-6 flex flex-col">
         <div class="my-2">
           <div
-              class="w-1/2 bg-neutral-600 h-4 rounded-md flex mx-auto animate-pulse duration-200"
+            class="w-1/2 bg-neutral-600 h-4 rounded-md flex mx-auto animate-pulse duration-200"
           ></div>
         </div>
         <div class="my-2">
           <div
-              class="w-1/3 bg-neutral-600 h-4 rounded-md flex mx-auto animate-pulse duration-200"
+            class="w-1/3 bg-neutral-600 h-4 rounded-md flex mx-auto animate-pulse duration-200"
           ></div>
         </div>
         <div class="my-2">
           <div
-              class="w-1/3 bg-neutral-600 h-4 rounded-md flex mx-auto animate-pulse duration-200"
+            class="w-1/3 bg-neutral-600 h-4 rounded-md flex mx-auto animate-pulse duration-200"
           ></div>
         </div>
       </div>
@@ -39,28 +39,28 @@
   </div>
 
   <div
-      v-else
-      class="min-h-screen bg-gradient-to-br from-black to-gray-900 p-10 flex flex-col gap-2 items-center justify-center"
+    v-else
+    class="min-h-screen bg-gradient-to-br from-black to-gray-900 p-10 flex flex-col gap-2 items-center justify-center"
   >
     <div
-        class="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 shadow-2xl max-w-4xl w-full"
+      class="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 shadow-2xl max-w-4xl w-full"
     >
       <!-- Адмін кнопки -->
       <div
-          v-if="store.userRole == 'admin'"
-          class="flex justify-center items-center"
+        v-if="store.userRole == 'admin'"
+        class="flex justify-center items-center"
       >
         <button
-            v-if="!photographer.isVerified"
-            @click="handleVerifyProfile"
-            class="px-6 py-2 flex mb-5 text-white bg-green-300/30 hover:bg-green-300/50 rounded-full border border-green-300/40 shadow-lg transition"
+          v-if="!photographer.isVerified"
+          @click="handleVerifyProfile"
+          class="px-6 py-2 flex mb-5 text-white bg-green-300/30 hover:bg-green-300/50 rounded-full border border-green-300/40 shadow-lg transition"
         >
           Верифікувати
         </button>
         <button
-            v-if="photographer.isVerified"
-            @click="handleDeverifyProfile"
-            class="px-6 py-2 flex mb-5 text-white bg-red-300/30 hover:bg-red-300/50 rounded-full border border-red-300/40 shadow-lg transition"
+          v-if="photographer.isVerified"
+          @click="handleDeverifyProfile"
+          class="px-6 py-2 flex mb-5 text-white bg-red-300/30 hover:bg-red-300/50 rounded-full border border-red-300/40 shadow-lg transition"
         >
           Деверифікувати
         </button>
@@ -68,22 +68,22 @@
       <!-- Кнопки фотографа -->
       <div class="flex mx-auto w-fit gap-2" v-if="isOwn">
         <button
-            v-if="!isEditing"
-            @click="handleEditProfile"
-            class="px-6 py-2 flex mb-5 text-white bg-gray-600/30 hover:bg-gray-600/50 rounded-full border border-gray-400/40 shadow-lg transition"
+          v-if="!isEditing"
+          @click="handleEditProfile"
+          class="px-6 py-2 flex mb-5 text-white bg-gray-600/30 hover:bg-gray-600/50 rounded-full border border-gray-400/40 shadow-lg transition"
         >
           Редагувати
         </button>
         <template v-else>
           <button
-              @click="handleUpdateProfile"
-              class="px-6 py-2 flex mb-5 text-white bg-blue-300/30 hover:bg-blue-300/50 rounded-full border border-blue-300/40 shadow-lg transition"
+            @click="handleUpdateProfile"
+            class="px-6 py-2 flex mb-5 text-white bg-blue-300/30 hover:bg-blue-300/50 rounded-full border border-blue-300/40 shadow-lg transition"
           >
             Зберегти
           </button>
           <button
-              @click="handleEditProfile"
-              class="px-6 py-2 flex mb-5 text-white bg-neutral-300/30 hover:bg-neutral-300/50 rounded-full border border-neutral-300/40 shadow-lg transition"
+            @click="handleEditProfile"
+            class="px-6 py-2 flex mb-5 text-white bg-neutral-300/30 hover:bg-neutral-300/50 rounded-full border border-neutral-300/40 shadow-lg transition"
           >
             Відмінити
           </button>
@@ -91,28 +91,28 @@
       </div>
 
       <h1
-          v-if="!isEditing"
-          class="text-3xl font-light text-white mb-2 text-center"
+        v-if="!isEditing"
+        class="text-3xl font-light text-white mb-2 text-center"
       >
         {{ photographer.name }}
       </h1>
       <input
-          v-else
-          class="text-3xl font-light text-white mb-2 text-center border mx-auto flex"
-          v-model="editForm.name"
-          type="text"
+        v-else
+        class="text-3xl font-light text-white mb-2 text-center border mx-auto flex"
+        v-model="editForm.name"
+        type="text"
       />
       <div
-          v-if="!photographer.isVerified"
-          class="flex mx-auto mb-4 justify-center w-full"
+        v-if="!photographer.isVerified"
+        class="flex mx-auto mb-4 justify-center w-full"
       >
         <span class="text-red-400 text-sm text-center"
-        >Фотограф не верифікований</span
+          >Фотограф не верифікований</span
         >
       </div>
       <div
-          v-if="photographer.totalRating"
-          class="flex mx-auto w-fit gap-2 mt-2 mb-4 text-md"
+        v-if="photographer.totalRating"
+        class="flex mx-auto w-fit gap-2 mt-2 mb-4 text-md"
       >
         <span class="text-yellow-400"> ★ </span>
         <span class="text-gray-400 font-bold justify-center">
@@ -124,24 +124,24 @@
       <div class="flex justify-center mb-6">
         <div v-if="!isEditing">
           <img
-              :src="photographer.avatar"
-              class="w-36 h-36 rounded-full object-cover border-2 border-white/30 shadow-lg"
+            :src="photographer.avatar"
+            class="w-36 h-36 rounded-full object-cover border-2 border-white/30 shadow-lg"
           />
         </div>
         <div v-else class="flex flex-col items-center">
           <img
-              :src="editForm.avatarPreview || photographer.avatar"
-              class="w-36 h-36 rounded-full object-cover border-2 border-white/30 shadow-lg mb-2"
+            :src="editForm.avatarPreview || photographer.avatar"
+            class="w-36 h-36 rounded-full object-cover border-2 border-white/30 shadow-lg mb-2"
           />
           <label
-              class="px-4 py-2 bg-gray-600/30 hover:bg-gray-600/50 text-white rounded-full border border-gray-400/40 cursor-pointer"
+            class="px-4 py-2 bg-gray-600/30 hover:bg-gray-600/50 text-white rounded-full border border-gray-400/40 cursor-pointer"
           >
             Змінити аватар
             <input
-                type="file"
-                accept="image/*"
-                class="hidden"
-                @change="handleAvatarChange"
+              type="file"
+              accept="image/*"
+              class="hidden"
+              @change="handleAvatarChange"
             />
           </label>
         </div>
@@ -152,9 +152,9 @@
           “{{ photographer.about }}”
         </p>
         <textarea
-            v-else
-            v-model="editForm.about"
-            class="border px-2 py-1 rounded-lg"
+          v-else
+          v-model="editForm.about"
+          class="border px-2 py-1 rounded-lg"
         ></textarea>
         <p v-if="!isEditing">
           📍 {{ photographer.city }} • 🎭 {{ photographer.style }} • 💵
@@ -163,21 +163,21 @@
         <p v-else>
           📍
           <input
-              type="text"
-              class="border px-2 py-1 rounded-md"
-              v-model="editForm.city"
+            type="text"
+            class="border px-2 py-1 rounded-md"
+            v-model="editForm.city"
           />
           • 🎭
           <input
-              type="text"
-              class="border px-2 py-1 rounded-md"
-              v-model="editForm.style"
+            type="text"
+            class="border px-2 py-1 rounded-md"
+            v-model="editForm.style"
           />
           • 💵
           <input
-              type="text"
-              class="border px-2 py-1 rounded-md"
-              v-model="editForm.price"
+            type="text"
+            class="border px-2 py-1 rounded-md"
+            v-model="editForm.price"
           />₴
         </p>
       </div>
@@ -195,21 +195,52 @@
       </div>
 
       <!-- Фото -->
-      <div class="mt-6 grid grid-cols-2 md:grid-cols-3 gap-4">
-        <img
+      <div class="mt-6">
+        <div v-if="!isEditing" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <img
             v-for="(photo, i) in photographer.photos"
             :key="i"
             :src="photo.url"
             class="rounded-xl object-cover w-full h-40 hover:scale-105 transition-transform duration-300 cursor-pointer shadow-md"
             @click="openPhoto(i)"
-        />
+          />
+        </div>
+
+        <div v-else class="flex flex-col items-center gap-4">
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-4 w-full">
+            <img
+              v-for="(preview, i) in editForm.photoPreviews"
+              :key="i"
+              :src="preview"
+              class="rounded-xl object-cover w-full h-40 shadow-md"
+            />
+          </div>
+          <label
+            class="px-4 py-2 bg-gray-600/30 hover:bg-gray-600/50 text-white rounded-full border border-gray-400/40 cursor-pointer"
+          >
+            Додати фото
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              class="hidden"
+              @change="handlePhotoChange"
+            />
+          </label>
+          <button
+            @click="savePhotos"
+            class="mt-2 px-4 py-2 bg-green-600 text-white rounded-full"
+          >
+            Зберегти фото
+          </button>
+        </div>
       </div>
 
       <!-- Кнопка бронювання -->
       <div class="mt-10 text-center">
         <button
-            @click="showBooking = true"
-            class="px-6 py-3 bg-blue-600/30 hover:bg-blue-600/50 text-white rounded-full border border-blue-400/40 shadow-lg transition"
+          @click="showBooking = true"
+          class="px-6 py-3 bg-blue-600/30 hover:bg-blue-600/50 text-white rounded-full border border-blue-400/40 shadow-lg transition"
         >
           📅 Забронювати
         </button>
@@ -218,108 +249,108 @@
 
     <!-- Відгуки -->
     <div
-        class="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 shadow-2xl max-w-4xl w-full"
+      class="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 shadow-2xl max-w-4xl w-full"
     >
       <h1 class="text-xl text-white mb-2 font-medium">Відгуки</h1>
       <hr class="border-white/10 mb-3" />
       <div
-          v-if="store.isLoggedIn"
-          class="flex flex-col gap-2 items-start justify-start w-full"
+        v-if="store.isLoggedIn"
+        class="flex flex-col gap-2 items-start justify-start w-full"
       >
         <h2 class="text-md text-white mb-1 font-light">Залишити відгук</h2>
         <div class="stars">
           <label
-              v-for="i in 5"
-              :key="i"
-              class="cursor-pointer text-2xl transition-colors"
-              :for="'star-' + i"
+            v-for="i in 5"
+            :key="i"
+            class="cursor-pointer text-2xl transition-colors"
+            :for="'star-' + i"
           >
             <input
-                type="radio"
-                :id="'star-' + i"
-                name="star"
-                :value="i"
-                v-model="reviewForm.rating"
-                class="hidden"
+              type="radio"
+              :id="'star-' + i"
+              name="star"
+              :value="i"
+              v-model="reviewForm.rating"
+              class="hidden"
             />
             <span
-                :class="{
+              :class="{
                 'text-yellow-400': reviewForm.rating >= i,
                 'text-gray-400': reviewForm.rating < i,
               }"
-            >★</span
+              >★</span
             >
           </label>
         </div>
         <textarea
-            v-model="reviewForm.comment"
-            placeholder="Ваш коментар"
-            class="w-full px-4 py-3 bg-white/10 border border-white/20 text-white rounded-xl placeholder-white/50"
+          v-model="reviewForm.comment"
+          placeholder="Ваш коментар"
+          class="w-full px-4 py-3 bg-white/10 border border-white/20 text-white rounded-xl placeholder-white/50"
         ></textarea>
         <button
-            @click="handleSubmitReview"
-            class="px-6 py-2 flex text-white bg-neutral-300/30 hover:bg-neutral-300/50 rounded-full border border-neutral-300/40 shadow-lg transition"
+          @click="handleSubmitReview"
+          class="px-6 py-2 flex text-white bg-neutral-300/30 hover:bg-neutral-300/50 rounded-full border border-neutral-300/40 shadow-lg transition"
         >
           Коментувати
         </button>
         <span v-if="reviewError" class="text-red-400 text-sm">{{
-            reviewError
-          }}</span>
+          reviewError
+        }}</span>
       </div>
       <h3 class="text-gray-400" v-else>Зареєструйтесь, щоб залишати відгуки</h3>
       <template v-if="photographer.ratings">
         <div
-            v-for="review in [...photographer.ratings].sort(
+          v-for="review in [...photographer.ratings].sort(
             (a, b) => b.id - a.id
           )"
-            :key="review.id"
-            class="bg-white/10 p-3 rounded-md text-white/80 flex justify-between mt-3"
+          :key="review.id"
+          class="bg-white/10 p-3 rounded-md text-white/80 flex justify-between mt-3"
         >
           <div v-if="review" class="flex flex-col gap-1">
             <!-- Дата і час -->
             <span class="text-xs text-gray-400 mb-2"
-            >{{ new Date(review.createdAt).toLocaleTimeString() }}
+              >{{ new Date(review.createdAt).toLocaleTimeString() }}
               {{ new Date(review.createdAt).toLocaleDateString() }}</span
             >
             <span v-if="review.author" class="text-md"
-            ><LazyNuxtLink
+              ><LazyNuxtLink
                 :title="'Перейти до профілю користувача ' + review.author.name"
                 class="hover:underline"
                 :to="'/user/' + review.author.id"
-            >{{ review.author.name }}</LazyNuxtLink
-            ></span
+                >{{ review.author.name }}</LazyNuxtLink
+              ></span
             >
             <span class="text-sm my-1">{{ review.comment }}</span>
             <span class="text-xs text-blue-400 mt-1">
               <label
-                  v-for="i in 5"
-                  :key="i"
-                  class="cursor-pointer text-2xl transition-colors"
-                  :for="'star-' + i"
+                v-for="i in 5"
+                :key="i"
+                class="cursor-pointer text-2xl transition-colors"
+                :for="'star-' + i"
               >
                 <input
-                    type="radio"
-                    :id="'star-' + i"
-                    name="star"
-                    :value="i"
-                    disabled
-                    :checked="i == review.rating"
-                    class="hidden"
+                  type="radio"
+                  :id="'star-' + i"
+                  name="star"
+                  :value="i"
+                  disabled
+                  :checked="i == review.rating"
+                  class="hidden"
                 />
                 <span
-                    :class="{
+                  :class="{
                     'text-yellow-400': review.rating >= i,
                     'text-gray-400': review.rating < i,
                   }"
-                >★</span
+                  >★</span
                 >
               </label>
             </span>
           </div>
           <button
-              v-if="store.userRole === 'admin'"
-              @click="handleDeleteReview(review.id)"
-              class="text-red-400 hover:text-red-300 hover:cursor-pointer text-xs transition"
+            v-if="store.userRole === 'admin'"
+            @click="handleDeleteReview(review.id)"
+            class="text-red-400 hover:text-red-300 hover:cursor-pointer text-xs transition"
           >
             Видалити
           </button>
@@ -330,29 +361,29 @@
 
   <!-- Модальне вікно бронювання -->
   <div
-      v-if="showBooking"
-      class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
+    v-if="showBooking"
+    class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
   >
     <div
-        ref="modalWindow"
-        class="bg-neutral-900 p-6 rounded-xl w-full max-w-md text-black relative text-white"
+      ref="modalWindow"
+      class="bg-neutral-900 p-6 rounded-xl w-full max-w-md text-black relative text-white"
     >
       <h3 class="text-xl mb-4 text-center font-semibold">Бронювання</h3>
 
       <input
-          v-if="!store || store.userPhone === ''"
-          v-model="booking.phone"
-          type="text"
-          placeholder="Номер телефону"
-          class="w-full mb-3 px-4 py-3 bg-white/10 border border-white/20 rounded-xl placeholder-white/60"
+        v-if="!store || store.userPhone === ''"
+        v-model="booking.phone"
+        type="text"
+        placeholder="Номер телефону"
+        class="w-full mb-3 px-4 py-3 bg-white/10 border border-white/20 rounded-xl placeholder-white/60"
       />
 
       <VueDatePicker
-          v-model="booking.date"
-          class="bg-neutral-600 rounded-md mt-1 mb-4"
-          dark
-          :min-date="new Date()"
-          :disabled-dates="disabledDates"
+        v-model="booking.date"
+        class="bg-neutral-600 rounded-md mt-1 mb-4"
+        dark
+        :min-date="new Date()"
+        :disabled-dates="disabledDates"
       />
 
       <p v-if="errorMessage" class="text-red-500 text-sm mb-3">
@@ -361,14 +392,14 @@
 
       <div class="flex justify-end gap-3">
         <button
-            @click="showBooking = false"
-            class="px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-white hover:bg-white/20 transition"
+          @click="showBooking = false"
+          class="px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-white hover:bg-white/20 transition"
         >
           Скасувати
         </button>
         <button
-            @click="handleSubmitBooking"
-            class="px-4 py-2 rounded-xl bg-blue-600/40 hover:bg-blue-600/60 text-white transition"
+          @click="handleSubmitBooking"
+          class="px-4 py-2 rounded-xl bg-blue-600/40 hover:bg-blue-600/60 text-white transition"
         >
           Підтвердити
         </button>
@@ -408,6 +439,43 @@ const disabledDates = computed(() => {
   return dates;
 });
 
+const handlePhotoChange = (event) => {
+  const files = event.target.files;
+  if (!files || !files.length) return;
+
+  editForm.value.photoFiles = Array.from(files);
+  editForm.value.photoPreviews = editForm.value.photoFiles.map((file) =>
+    URL.createObjectURL(file)
+  );
+};
+
+const savePhotos = async () => {
+  try {
+    const formData = new FormData();
+    editForm.value.photoFiles.forEach((file) => {
+      formData.append("photos", file);
+    });
+
+    const res = await fetch(`/api/photographers/photos/${route.params.id}`, {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!res.ok) throw new Error("Помилка при збереженні фото");
+
+    const data = await res.json();
+    photographer.value.photos = data.photos;
+
+    // Очистити поля після збереження
+    editForm.value.photoFiles = [];
+    editForm.value.photoPreviews.forEach((url) => URL.revokeObjectURL(url));
+    editForm.value.photoPreviews = [];
+  } catch (err) {
+    alert("Не вдалося зберегти фото");
+    console.error(err);
+  }
+};
+
 const editForm = ref({
   name: "",
   about: "",
@@ -416,6 +484,8 @@ const editForm = ref({
   price: null,
   avatar: null,
   avatarPreview: null,
+  photoFiles: [],
+  photoPreviews: [],
 });
 
 const reviewForm = ref({
@@ -476,7 +546,7 @@ const handleSubmitReview = async () => {
       reviewForm.value.rating = null;
       photographer.value = data.photographer;
       const response = await $fetch(
-          `/api/photographers/rating/${route.params.id}`
+        `/api/photographers/rating/${route.params.id}`
       );
       const totalRating = await formTotalRating(response.rating);
       photographer.value = {
@@ -506,7 +576,7 @@ const handleDeleteReview = async (id) => {
       const data = await res.json();
       photographer.value = data.photographer;
       const response = await $fetch(
-          `/api/photographers/rating/${route.params.id}`
+        `/api/photographers/rating/${route.params.id}`
       );
       const totalRating = await formTotalRating(response.rating);
       photographer.value = {
@@ -559,7 +629,7 @@ const handleUpdateProfile = async () => {
         editForm.value.avatar = null;
       }
       const response = await $fetch(
-          `/api/photographers/rating/${route.params.id}`
+        `/api/photographers/rating/${route.params.id}`
       );
       const totalRating = await formTotalRating(response.rating);
       photographer.value = {
@@ -585,7 +655,7 @@ const handleVerifyProfile = async () => {
     if (data.status == 200) {
       photographer.value = data.photographer;
       const response = await $fetch(
-          `/api/photographers/rating/${route.params.id}`
+        `/api/photographers/rating/${route.params.id}`
       );
       const totalRating = await formTotalRating(response.rating);
       photographer.value = {
@@ -611,7 +681,7 @@ const handleDeverifyProfile = async () => {
     if (data.status == 200) {
       photographer.value = data.photographer;
       const response = await $fetch(
-          `/api/photographers/rating/${route.params.id}`
+        `/api/photographers/rating/${route.params.id}`
       );
       const totalRating = await formTotalRating(response.rating);
       photographer.value = {
@@ -661,7 +731,7 @@ onMounted(async () => {
     isOwn.value = photographer.value.userId === store.userId;
 
     const response = await $fetch(
-        `/api/photographers/rating/${route.params.id}`
+      `/api/photographers/rating/${route.params.id}`
     );
     const totalRating = await formTotalRating(response.rating);
     photographer.value = {
