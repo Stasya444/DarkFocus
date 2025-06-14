@@ -9,7 +9,7 @@
         v-model="comment"
         placeholder="Залиште коментар"
         class="border px-4 py-2 rounded"
-      />
+      ></textarea>
     </div>
     <button
       type="submit"

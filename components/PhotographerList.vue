@@ -81,7 +81,7 @@
       </p>
     </div>
 
-    <!-- 📸 Список фотографів -->
+    <!-- Список фотографів -->
     <div v-else class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6">
       <PhotographerCard
         v-for="photographer in filteredPhotographers"
