@@ -27,8 +27,8 @@
     </div>
 
     <div class="flex flex-wrap justify-between text-sm text-white/70 mb-4">
-      <span>📆 {{ photographer.experience || 0 }} років досвіду</span>
-      <span>📸 {{ photographer.ordersCount || 0 }} замовлень</span>
+      <span>📆 {{ differenceInYears(new Date(), new Date(photographer.createdAt)) || 0 }} років з нами</span>
+      <span>📸 {{ photographer.bookings.length || 0 }} замовлень</span>
     </div>
 
     <p class="text-sm text-white/80 mb-5">
@@ -98,6 +98,7 @@
 </template>
 
 <script setup>
+import { differenceInYears } from 'date-fns';
 const props = defineProps({
   photographer: {
     type: Object,

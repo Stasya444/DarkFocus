@@ -8,6 +8,7 @@ export default defineEventHandler(async () => {
     include: {
       photos: true,
       ratings: true,
+      bookings: true
     },
   });
 
