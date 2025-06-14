@@ -81,14 +81,46 @@
           class="text-gray-400 hover:text-white duration-200"
           >Перейти до профілю фотографа</LazyNuxtLink
         >
-        <button
-          @click="isCreatingPhotographer = true"
+
+        <div
+          class="flex mx-auto w-fit gap-2"
           v-if="
-            user.id == store.userId &&
-            store.userRole != 'guest' &&
+            user.id === store.userId &&
+            (store.userRole === 'admin' || store.userRole === 'photographer')
+          "
+        >
+          <!-- Редагування -->
+          <button
+            v-if="!isEditing"
+            @click="handleEditProfile"
+            class="px-6 py-2 flex mb-5 text-white bg-gray-600/30 hover:bg-gray-600/50 rounded-full border border-gray-400/40 shadow-lg transition"
+          >
+            Редагувати
+          </button>
+
+          <button
+            v-if="isEditing"
+            @click="handleUpdateProfile"
+            class="px-6 py-2 flex mb-5 text-white bg-blue-300/30 hover:bg-blue-300/50 rounded-full border border-blue-300/40 shadow-lg transition"
+          >
+            Зберегти
+          </button>
+          <button
+            v-if="isEditing"
+            @click="handleEditProfile"
+            class="px-6 py-2 flex mb-5 text-white bg-neutral-300/30 hover:bg-neutral-300/50 rounded-full border border-neutral-300/40 shadow-lg transition"
+          >
+            Відмінити
+          </button>
+        </div>
+
+        <button
+          v-if="
+            store.userRole === 'photographer' &&
+            user.id === store.userId &&
             !photographer
           "
-          to="/"
+          @click="isCreatingPhotographer = true"
           class="text-gray-400 hover:text-white duration-200"
         >
           Створити профіль фотографа
@@ -118,7 +150,96 @@ const user = ref(null);
 const store = useUserStore();
 const photographer = ref(null);
 const isCreatingPhotographer = ref(false);
+const isEditing = ref(false);
 const modalWindow = useTemplateRef("modalWindow");
+const errorMessage = ref(null);
+
+const editForm = ref({
+  name: "",
+  about: "",
+  city: "",
+  style: "",
+  price: null,
+  avatar: null,
+  avatarPreview: null,
+});
+
+const handleAvatarChange = (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+  const maxSize = 5 * 1024 * 1024;
+
+  if (!allowedTypes.includes(file.type)) {
+    errorMessage.value = "Непідтримуваний тип файлу";
+    return;
+  }
+  if (file.size > maxSize) {
+    errorMessage.value = "Файл занадто великий";
+    return;
+  }
+
+  editForm.value.avatar = file;
+  editForm.value.avatarPreview = URL.createObjectURL(file);
+};
+
+const handleEditProfile = () => {
+  if (isEditing.value) {
+    if (editForm.value.avatarPreview) {
+      URL.revokeObjectURL(editForm.value.avatarPreview);
+      editForm.value.avatarPreview = null;
+      editForm.value.avatar = null;
+    }
+  } else {
+    editForm.value = {
+      name: photographer.value.name || "",
+      about: photographer.value.about || "",
+      city: photographer.value.city || "",
+      style: photographer.value.style || "",
+      price: photographer.value.price || null,
+      avatar: null,
+      avatarPreview: null,
+    };
+  }
+  isEditing.value = !isEditing.value;
+};
+
+const handleUpdateProfile = async () => {
+  try {
+    errorMessage.value = null;
+    const formData = new FormData();
+
+    formData.append("name", editForm.value.name);
+    formData.append("about", editForm.value.about);
+    formData.append("city", editForm.value.city);
+    formData.append("style", editForm.value.style);
+    formData.append("price", editForm.value.price);
+
+    if (editForm.value.avatar) {
+      formData.append("avatar", editForm.value.avatar);
+    }
+
+    const res = await fetch(`/api/photographers/edit/${route.params.id}`, {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await res.json();
+    if (!data.photographer) throw new Error("Помилка при оновленні профілю");
+
+    photographer.value = data.photographer;
+    isEditing.value = false;
+
+    if (editForm.value.avatarPreview) {
+      URL.revokeObjectURL(editForm.value.avatarPreview);
+      editForm.value.avatar = null;
+      editForm.value.avatarPreview = null;
+    }
+  } catch (err) {
+    errorMessage.value = err.message || "Не вдалося оновити профіль";
+  }
+};
 
 onMounted(async () => {
   try {
@@ -126,21 +247,31 @@ onMounted(async () => {
     if (!res.ok) throw new Error("Користувач не знайдений");
     const data = await res.json();
     user.value = data.user;
+
     const response = await fetch(
       `/api/photographers/byuser/${route.params.id}`
     );
     if (!response.ok) throw new Error("Профіль фотографа не знайдено");
     const d = await response.json();
-    if (d.photographer) photographer.value = d.photographer;
-    else photographer.value = null;
+    if (d.photographer) {
+      photographer.value = d.photographer;
+      editForm.value = {
+        name: d.photographer.name || "",
+        about: d.photographer.about || "",
+        city: d.photographer.city || "",
+        style: d.photographer.style || "",
+        price: d.photographer.price || null,
+        avatar: null,
+        avatarPreview: null,
+      };
+    } else {
+      photographer.value = null;
+    }
   } catch (err) {
     console.error(err);
   }
 
-  onClickOutside(
-    modalWindow,
-    (event) => (isCreatingPhotographer.value = false)
-  );
+  onClickOutside(modalWindow, () => (isCreatingPhotographer.value = false));
 });
 </script>
 
