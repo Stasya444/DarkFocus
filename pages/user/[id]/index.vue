@@ -1,278 +1,215 @@
 <template>
-  <div
-    v-if="!user"
-    class="min-h-screen flex items-center justify-center bg-black text-white text-xl"
-  >
-    <div
-      class="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 shadow-2xl max-w-4xl w-full"
-    >
-      <h1 class="text-3xl font-light text-white mb-4 text-center">
-        <div
-          class="w-1/2 bg-neutral-600 h-4 rounded-md flex mx-auto animate-pulse duration-200"
-        ></div>
-      </h1>
-
-      <div class="flex justify-center mb-6">
-        <div
-          class="w-36 h-36 rounded-full bg-neutral-600 animate-pulse duration-200"
-        ></div>
-      </div>
-
-      <div class="text-center space-y-2 text-white/80 mb-6 flex flex-col">
-        <div class="my-2">
-          <div
-            class="w-1/2 bg-neutral-600 h-4 rounded-md flex mx-auto animate-pulse duration-200"
-          ></div>
-        </div>
-        <div class="my-2">
-          <div
-            class="w-1/3 bg-neutral-600 h-4 rounded-md flex mx-auto animate-pulse duration-200"
-          ></div>
-        </div>
-        <div class="my-2">
-          <div
-            class="w-1/3 bg-neutral-600 h-4 rounded-md flex mx-auto animate-pulse duration-200"
-          ></div>
-        </div>
-        <!-- <p v-if="photographer" class="text-lg">{{ photographer.name }}</p>
-        <p v-if="photographer" class="text-lg">Ціна: {{ photographer.price }} грн</p>
-        <LazyNuxtLink v-if="user.role !== 'guest' && photographer" :to="'/photographers/'+photographer.id" class="text-gray-400 hover:text-white duration-200">Перейти до профілю фотографа</LazyNuxtLink>
-        <button @click="isCreatingPhotographer = true" v-if="user.id == store.userId && store.userRole != 'guest' && !photographer" to="/" class="text-gray-400 hover:text-white duration-200">Створити профіль фотографа</button> -->
-      </div>
+  <div v-if="!user" class="min-h-screen flex items-center justify-center bg-black text-white text-xl">
+    <!-- Loader -->
+    <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 shadow-2xl max-w-4xl w-full">
+      <div class="w-1/2 bg-neutral-600 h-4 rounded-md mx-auto animate-pulse mb-6"></div>
+      <div class="w-36 h-36 rounded-full bg-neutral-600 animate-pulse mx-auto mb-6"></div>
+      <div class="w-1/3 bg-neutral-600 h-4 rounded-md mx-auto animate-pulse mb-2"></div>
+      <div class="w-1/3 bg-neutral-600 h-4 rounded-md mx-auto animate-pulse"></div>
     </div>
   </div>
 
-  <div
-    v-else
-    class="min-h-screen bg-gradient-to-br from-black to-gray-900 p-10 flex items-center justify-center"
-  >
-    <div
-      class="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 shadow-2xl max-w-4xl w-full"
-    >
-      <h1 class="text-3xl font-light text-white mb-4 text-center">
-        {{ user.name }}
-      </h1>
-
+  <div v-else class="min-h-screen bg-gradient-to-br from-black to-gray-900 p-10 flex items-center justify-center">
+    <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 shadow-2xl max-w-4xl w-full">
+      <h1 class="text-3xl font-light text-white mb-4 text-center">{{ user.name }}</h1>
       <div class="flex justify-center mb-6">
         <img
-          :src="user.avatar"
-          :alt="user.name"
-          class="w-36 h-36 rounded-full object-cover border-2 border-blue-500/30 shadow-lg grayscale"
+            :src="avatarPreview || user.avatar || defaultAvatar"
+            :alt="user.name"
+            class="w-36 h-36 rounded-full object-cover border-2 border-blue-500/30 shadow-lg"
         />
       </div>
 
-      <div class="text-center space-y-2 text-white/80 mb-6 flex flex-col">
-        <p class="text-lg">
-          {{
-            user.role == "guest"
-              ? ""
-              : user.role == "photographer"
-              ? "Фотограф"
-              : "Адміністратор"
-          }}
-        </p>
-        <p v-if="photographer" class="text-lg">{{ photographer.name }}</p>
-        <p v-if="photographer" class="text-lg">
-          Ціна: {{ photographer.price }} грн
-        </p>
-        <LazyNuxtLink
-          v-if="user.role !== 'guest' && photographer"
-          :to="'/photographers/' + photographer.id"
-          class="text-gray-400 hover:text-white duration-200"
-          >Перейти до профілю фотографа</LazyNuxtLink
-        >
-
-        <div
-          class="flex mx-auto w-fit gap-2"
-          v-if="
-            user.id === store.userId &&
-            (store.userRole === 'admin' || store.userRole === 'photographer')
-          "
-        >
-          <!-- Редагування -->
-          <button
-            v-if="!isEditing"
-            @click="handleEditProfile"
-            class="px-6 py-2 flex mb-5 text-white bg-gray-600/30 hover:bg-gray-600/50 rounded-full border border-gray-400/40 shadow-lg transition"
+      <!-- photographer role -->
+      <template v-if="user.role === 'photographer' && photographer">
+        <div class="text-center space-y-2 text-white/80 mb-6 flex flex-col">
+          <p class="text-lg font-semibold">{{ photographer.name }}</p>
+          <p class="text-lg">Місто: {{ photographer.city }}</p>
+          <p class="text-lg">Стиль: {{ photographer.style }}</p>
+          <p class="text-lg">Про себе: {{ photographer.about }}</p>
+          <p class="text-lg">Ціна: {{ photographer.price }} грн</p>
+          <LazyNuxtLink
+              :to="'/photographers/' + photographer.id"
+              class="text-blue-400 hover:text-blue-200 duration-200 block mt-2"
           >
-            Редагувати
-          </button>
-
-          <button
-            v-if="isEditing"
-            @click="handleUpdateProfile"
-            class="px-6 py-2 flex mb-5 text-white bg-blue-300/30 hover:bg-blue-300/50 rounded-full border border-blue-300/40 shadow-lg transition"
-          >
-            Зберегти
-          </button>
-          <button
-            v-if="isEditing"
-            @click="handleEditProfile"
-            class="px-6 py-2 flex mb-5 text-white bg-neutral-300/30 hover:bg-neutral-300/50 rounded-full border border-neutral-300/40 shadow-lg transition"
-          >
-            Відмінити
-          </button>
+            Перейти до профілю фотографа
+          </LazyNuxtLink>
         </div>
+      </template>
 
-        <button
-          v-if="
-            store.userRole === 'photographer' &&
-            user.id === store.userId &&
-            !photographer
-          "
-          @click="isCreatingPhotographer = true"
-          class="text-gray-400 hover:text-white duration-200"
-        >
-          Створити профіль фотографа
-        </button>
-      </div>
-    </div>
+      <!-- guest/admin role -->
+      <template v-else>
+        <form class="flex flex-col items-center gap-4" @submit.prevent="handleSave">
+          <div class="w-full max-w-xs">
+            <label class="block mb-1 text-white/70" for="name">Імʼя</label>
+            <input
+                v-if="isEditing"
+                v-model="editForm.name"
+                id="name"
+                type="text"
+                class="w-full rounded-lg px-4 py-2 bg-white/20 border border-white/10 text-white"
+                required
+            />
+            <div v-else class="text-xl">{{ user.name }}</div>
+          </div>
 
-    <div
-      ref="modalWindow"
-      class="w-full overflow-hidden max-w-160 h-fit rounded-2xl bg-neutral-500/60 backdrop-blur-md absolute"
-      v-if="user.id == store.userId && !photographer && isCreatingPhotographer"
-    >
-      <AddPhotographerForm :userId="user.id" />
+          <div class="w-full max-w-xs">
+            <label class="block mb-1 text-white/70" for="email">Email</label>
+            <input
+                v-if="isEditing"
+                v-model="editForm.email"
+                id="email"
+                type="email"
+                class="w-full rounded-lg px-4 py-2 bg-white/20 border border-white/10 text-white"
+                required
+            />
+            <div v-else class="text-lg">{{ user.email }}</div>
+          </div>
+
+          <div class="w-full max-w-xs">
+            <label class="block mb-1 text-white/70">Аватар</label>
+            <input
+                v-if="isEditing"
+                type="file"
+                accept="image/*"
+                class="block"
+                @change="handleAvatarChange"
+            />
+          </div>
+
+          <div v-if="errorMessage" class="text-red-400 text-sm">{{ errorMessage }}</div>
+
+          <div class="flex gap-3 mt-4">
+            <button
+                v-if="!isEditing && isOwnProfile"
+                type="button"
+                class="px-6 py-2 text-white bg-gray-600/30 hover:bg-gray-600/50 rounded-full border border-gray-400/40 shadow-lg transition"
+                @click="enableEdit"
+            >
+              Редагувати
+            </button>
+            <button
+                v-if="isEditing"
+                type="submit"
+                class="px-6 py-2 text-white bg-blue-300/30 hover:bg-blue-300/50 rounded-full border border-blue-300/40 shadow-lg transition"
+            >
+              Зберегти
+            </button>
+            <button
+                v-if="isEditing"
+                type="button"
+                class="px-6 py-2 text-white bg-neutral-300/30 hover:bg-neutral-300/50 rounded-full border border-neutral-300/40 shadow-lg transition"
+                @click="cancelEdit"
+            >
+              Відмінити
+            </button>
+          </div>
+        </form>
+      </template>
     </div>
   </div>
 </template>
 
 <script setup>
-import { useRoute } from "vue-router";
-import { ref, onMounted, useTemplateRef } from "vue";
-import { useUserStore } from "../../../stores/user";
-import AddPhotographerForm from "../../../components/AddPhotographerForm.vue";
-import { onClickOutside } from "@vueuse/core";
+import { useRoute } from "vue-router"
+import { ref, onMounted, computed } from "vue"
+import { useUserStore } from "../../../stores/user"
 
-const route = useRoute();
-const user = ref(null);
-const store = useUserStore();
-const photographer = ref(null);
-const isCreatingPhotographer = ref(false);
-const isEditing = ref(false);
-const modalWindow = useTemplateRef("modalWindow");
-const errorMessage = ref(null);
+const route = useRoute()
+const user = ref(null)
+const photographer = ref(null)
+const isEditing = ref(false)
+const errorMessage = ref(null)
+const avatarPreview = ref(null)
+const defaultAvatar = "/default-avatar.png"
+
+const store = useUserStore()
+const isOwnProfile = computed(() => user.value && store.userId == user.value.id)
 
 const editForm = ref({
   name: "",
-  about: "",
-  city: "",
-  style: "",
-  price: null,
+  email: "",
   avatar: null,
-  avatarPreview: null,
-});
+})
 
-const handleAvatarChange = (event) => {
-  const file = event.target.files[0];
-  if (!file) return;
+const enableEdit = () => {
+  editForm.value.name = user.value.name
+  editForm.value.email = user.value.email
+  isEditing.value = true
+}
 
-  const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
-  const maxSize = 5 * 1024 * 1024;
+const cancelEdit = () => {
+  editForm.value.name = user.value.name
+  editForm.value.email = user.value.email
+  editForm.value.avatar = null
+  if (avatarPreview.value) URL.revokeObjectURL(avatarPreview.value)
+  avatarPreview.value = null
+  isEditing.value = false
+  errorMessage.value = null
+}
 
+const handleAvatarChange = (e) => {
+  const file = e.target.files[0]
+  if (!file) return
+  const allowedTypes = ["image/jpeg", "image/png", "image/webp"]
+  const maxSize = 5 * 1024 * 1024
   if (!allowedTypes.includes(file.type)) {
-    errorMessage.value = "Непідтримуваний тип файлу";
-    return;
+    errorMessage.value = "Непідтримуваний тип файлу"
+    return
   }
   if (file.size > maxSize) {
-    errorMessage.value = "Файл занадто великий";
-    return;
+    errorMessage.value = "Файл занадто великий"
+    return
   }
+  editForm.value.avatar = file
+  if (avatarPreview.value) URL.revokeObjectURL(avatarPreview.value)
+  avatarPreview.value = URL.createObjectURL(file)
+}
 
-  editForm.value.avatar = file;
-  editForm.value.avatarPreview = URL.createObjectURL(file);
-};
-
-const handleEditProfile = () => {
-  if (isEditing.value) {
-    if (editForm.value.avatarPreview) {
-      URL.revokeObjectURL(editForm.value.avatarPreview);
-      editForm.value.avatarPreview = null;
-      editForm.value.avatar = null;
-    }
-  } else {
-    editForm.value = {
-      name: photographer.value.name || "",
-      about: photographer.value.about || "",
-      city: photographer.value.city || "",
-      style: photographer.value.style || "",
-      price: photographer.value.price || null,
-      avatar: null,
-      avatarPreview: null,
-    };
-  }
-  isEditing.value = !isEditing.value;
-};
-
-const handleUpdateProfile = async () => {
+const handleSave = async () => {
   try {
-    errorMessage.value = null;
-    const formData = new FormData();
-
-    formData.append("name", editForm.value.name);
-    formData.append("about", editForm.value.about);
-    formData.append("city", editForm.value.city);
-    formData.append("style", editForm.value.style);
-    formData.append("price", editForm.value.price);
-
+    errorMessage.value = null
+    const formData = new FormData()
+    formData.append("name", editForm.value.name)
+    formData.append("email", editForm.value.email)
     if (editForm.value.avatar) {
-      formData.append("avatar", editForm.value.avatar);
+      formData.append("avatar", editForm.value.avatar)
     }
-
-    const res = await fetch(`/api/photographers/edit/${route.params.id}`, {
+    const res = await fetch(`/api/users/edit/${user.value.id}`, {
       method: "POST",
       body: formData,
-    });
-
-    const data = await res.json();
-    if (!data.photographer) throw new Error("Помилка при оновленні профілю");
-
-    photographer.value = data.photographer;
-    isEditing.value = false;
-
-    if (editForm.value.avatarPreview) {
-      URL.revokeObjectURL(editForm.value.avatarPreview);
-      editForm.value.avatar = null;
-      editForm.value.avatarPreview = null;
-    }
+    })
+    const data = await res.json()
+    if (!data.user) throw new Error(data.message || "Помилка при оновленні профілю")
+    user.value = data.user
+    cancelEdit()
   } catch (err) {
-    errorMessage.value = err.message || "Не вдалося оновити профіль";
+    errorMessage.value = err.message || "Не вдалося оновити профіль"
   }
-};
+}
 
 onMounted(async () => {
-  try {
-    const res = await fetch(`/api/getuser/${route.params.id}`);
-    if (!res.ok) throw new Error("Користувач не знайдений");
-    const data = await res.json();
-    user.value = data.user;
-
-    const response = await fetch(
-      `/api/photographers/byuser/${route.params.id}`
-    );
-    if (!response.ok) throw new Error("Профіль фотографа не знайдено");
-    const d = await response.json();
-    if (d.photographer) {
-      photographer.value = d.photographer;
-      editForm.value = {
-        name: d.photographer.name || "",
-        about: d.photographer.about || "",
-        city: d.photographer.city || "",
-        style: d.photographer.style || "",
-        price: d.photographer.price || null,
-        avatar: null,
-        avatarPreview: null,
-      };
-    } else {
-      photographer.value = null;
-    }
-  } catch (err) {
-    console.error(err);
+  const res = await fetch(`/api/getuser/${route.params.id}`)
+  if (res.ok) {
+    const data = await res.json()
+    user.value = data.user
+    editForm.value.name = data.user.name
+    editForm.value.email = data.user.email
+  } else {
+    user.value = null
+    return
   }
 
-  onClickOutside(modalWindow, () => (isCreatingPhotographer.value = false));
-});
+  if (user.value && user.value.role === "photographer") {
+    const response = await fetch(`/api/photographers/byuser/${user.value.id}`)
+    if (response.ok) {
+      const d = await response.json()
+      if (d.photographer) {
+        photographer.value = Array.isArray(d.photographer) ? d.photographer[0] : d.photographer
+      }
+    }
+  }
+})
 </script>
 
 <style>
