@@ -1,95 +1,36 @@
 <template>
-  <div v-if="!user" class="min-h-screen flex items-center justify-center bg-black text-white text-xl">
+  <div v-if="!user" class="min-h-screen flex items-center justify-center bg-neutral-900 text-white text-xl">
     <!-- Loader -->
-    <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 shadow-2xl max-w-4xl w-full">
-      <div class="w-1/2 bg-neutral-600 h-4 rounded-md mx-auto animate-pulse mb-6"></div>
-      <div class="w-36 h-36 rounded-full bg-neutral-600 animate-pulse mx-auto mb-6"></div>
-      <div class="w-1/3 bg-neutral-600 h-4 rounded-md mx-auto animate-pulse mb-2"></div>
-      <div class="w-1/3 bg-neutral-600 h-4 rounded-md mx-auto animate-pulse"></div>
+    <div class="bg-neutral-800/80 backdrop-blur-md border border-white/10 rounded-xl p-6 shadow-2xl max-w-4xl w-full">
+      <div class="w-1/2 bg-neutral-700 h-4 rounded-md mx-auto animate-pulse mb-6"></div>
+      <div class="w-36 h-36 rounded-full bg-neutral-700 animate-pulse mx-auto mb-6"></div>
+      <div class="w-1/3 bg-neutral-700 h-4 rounded-md mx-auto animate-pulse mb-2"></div>
+      <div class="w-1/3 bg-neutral-700 h-4 rounded-md mx-auto animate-pulse"></div>
     </div>
   </div>
 
-  <div v-else class="min-h-screen bg-gradient-to-br from-black to-gray-900 p-10 flex items-center justify-center">
-    <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 shadow-2xl max-w-4xl w-full space-y-6">
-
-      <!-- Профиль пользователя -->
-      <form class="flex flex-col items-center gap-4" @submit.prevent="handleSave">
-        <div class="flex justify-center mb-4">
-          <img
-              :src="avatarPreview || user.avatar || defaultAvatar"
-              :alt="user.name"
-              class="w-36 h-36 rounded-full object-cover border-2 border-blue-500/30 shadow-lg"
-          />
-        </div>
-        <div class="w-full max-w-xs">
-          <label class="block mb-1 text-white/70" for="name">Імʼя</label>
-          <input
-              v-if="isEditing"
-              v-model="editForm.name"
-              id="name"
-              type="text"
-              class="w-full rounded-lg px-4 py-2 bg-white/20 border border-white/10 text-white"
-              required
-          />
-          <div v-else class="text-xl">{{ user.name }}</div>
-        </div>
-
-        <div class="w-full max-w-xs">
-          <label class="block mb-1 text-white/70" for="email">Email</label>
-          <input
-              v-if="isEditing"
-              v-model="editForm.email"
-              id="email"
-              type="email"
-              class="w-full rounded-lg px-4 py-2 bg-white/20 border border-white/10 text-white"
-              required
-          />
-          <div v-else class="text-lg">{{ user.email }}</div>
-        </div>
-
-        <div class="w-full max-w-xs">
-          <label class="block mb-1 text-white/70">Аватар</label>
-          <input
-              v-if="isEditing"
-              type="file"
-              accept="image/*"
-              class="block"
-              @change="handleAvatarChange"
-          />
-        </div>
-
-        <div v-if="errorMessage" class="text-red-400 text-sm">{{ errorMessage }}</div>
-
-        <div class="flex gap-3 mt-4">
-          <button
-              v-if="!isEditing && isOwnProfile"
-              type="button"
-              class="px-6 py-2 text-white bg-gray-600/30 hover:bg-gray-600/50 rounded-full border border-gray-400/40 shadow-lg transition"
-              @click="enableEdit"
-          >
-            Редагувати
-          </button>
-          <button
-              v-if="isEditing"
-              type="submit"
-              class="px-6 py-2 text-white bg-blue-300/30 hover:bg-blue-300/50 rounded-full border border-blue-300/40 shadow-lg transition"
-          >
-            Зберегти
-          </button>
-          <button
-              v-if="isEditing"
-              type="button"
-              class="px-6 py-2 text-white bg-neutral-300/30 hover:bg-neutral-300/50 rounded-full border border-neutral-300/40 shadow-lg transition"
-              @click="cancelEdit"
-          >
-            Відмінити
-          </button>
-        </div>
-      </form>
+  <div v-else class="min-h-screen bg-gradient-to-br from-black to-neutral-900 p-10 flex items-center justify-center">
+    <div class="bg-neutral-900/80 backdrop-blur-lg border border-white/10 rounded-2xl p-6 shadow-2xl max-w-4xl w-full space-y-8">
+      <div class="flex flex-col items-center">
+        <img
+            :src="user.avatar || defaultAvatar"
+            :alt="user.name"
+            class="w-36 h-36 rounded-full object-cover border-2 border-blue-400/30 shadow-lg mb-4 bg-neutral-800"
+        />
+        <h1 class="text-3xl font-light text-white mb-2 text-center">{{ user.name }}</h1>
+        <div class="text-lg text-neutral-400">{{ user.email }}</div>
+        <button
+            v-if="isOwnProfile"
+            @click="openEditModal"
+            class="px-7 py-2 mt-5 text-white bg-blue-600/80 hover:bg-blue-700 rounded-full shadow-lg font-semibold transition"
+        >
+          Редагувати
+        </button>
+      </div>
 
       <!-- photographer role — карточка или создание профиля -->
       <div v-if="user.role === 'photographer'">
-        <div v-if="photographer" class="text-center space-y-2 text-white/80 mb-2 flex flex-col">
+        <div v-if="photographer" class="text-center space-y-2 text-neutral-300 mb-2 flex flex-col">
           <p class="text-lg font-semibold">{{ photographer.name }}</p>
           <p class="text-lg">Місто: {{ photographer.city }}</p>
           <p class="text-lg">Стиль: {{ photographer.style }}</p>
@@ -110,16 +51,89 @@
           >
             Створити профіль фотографа
           </button>
-          <!-- Модальная форма создания профиля фотографа -->
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL редактирования профиля пользователя -->
+    <Transition name="fade">
+      <div
+          v-if="showEditModal"
+          class="fixed inset-0 z-40 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+          @click.self="closeEditModal"
+      >
+        <form
+            class="bg-neutral-900/95 rounded-2xl p-8 shadow-2xl max-w-md w-full flex flex-col gap-5 animate-pop border border-neutral-700"
+            @submit.prevent="handleSave"
+        >
+          <div class="text-center mb-2">
+            <h2 class="text-2xl font-bold text-white">Редагування профілю</h2>
+          </div>
+          <div class="flex flex-col gap-2">
+            <label class="font-medium text-neutral-300">Імʼя</label>
+            <input
+                v-model="editForm.name"
+                type="text"
+                required
+                class="rounded-lg px-4 py-2 border border-neutral-700 bg-neutral-800 text-white focus:outline-none focus:ring focus:ring-blue-700"
+            />
+          </div>
+          <div class="flex flex-col gap-2">
+            <label class="font-medium text-neutral-300">Email</label>
+            <input
+                v-model="editForm.email"
+                type="email"
+                required
+                class="rounded-lg px-4 py-2 border border-neutral-700 bg-neutral-800 text-white focus:outline-none focus:ring focus:ring-blue-700"
+            />
+          </div>
+          <div class="flex flex-col gap-2">
+            <label class="font-medium text-neutral-300">Аватар</label>
+            <input
+                type="file"
+                accept="image/*"
+                class="block"
+                @change="handleAvatarChange"
+            />
+            <img
+                v-if="avatarPreview"
+                :src="avatarPreview"
+                class="w-20 h-20 rounded-full mx-auto mt-2 border border-neutral-700"
+                alt="Avatar preview"
+            />
+          </div>
+          <div v-if="errorMessage" class="text-red-400 text-sm text-center">{{ errorMessage }}</div>
+          <div class="flex gap-3 justify-center mt-3">
+            <button
+                type="submit"
+                class="px-6 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-full shadow font-semibold transition"
+            >Зберегти</button>
+            <button
+                type="button"
+                @click="closeEditModal"
+                class="px-6 py-2 text-neutral-200 bg-neutral-800 hover:bg-neutral-700 rounded-full shadow transition"
+            >Скасувати</button>
+          </div>
+        </form>
+      </div>
+    </Transition>
+
+    <!-- MODAL создания профиля фотографа -->
+    <Transition name="fade">
+      <div
+          v-if="isCreatingPhotographer"
+          class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+          @click.self="isCreatingPhotographer = false"
+      >
+        <div class="bg-neutral-900/95 rounded-2xl p-7 shadow-2xl max-w-xl w-full border border-neutral-700 animate-pop">
           <AddPhotographerForm
-              v-if="isCreatingPhotographer"
               :userId="user.id"
               @close="isCreatingPhotographer = false"
               @created="onPhotographerCreated"
           />
         </div>
       </div>
-    </div>
+    </Transition>
   </div>
 </template>
 
@@ -132,7 +146,8 @@ import AddPhotographerForm from "../../../components/AddPhotographerForm.vue"
 const route = useRoute()
 const user = ref(null)
 const photographer = ref(null)
-const isEditing = ref(false)
+const showEditModal = ref(false)
+const isCreatingPhotographer = ref(false)
 const errorMessage = ref(null)
 const avatarPreview = ref(null)
 const defaultAvatar = "/default-avatar.png"
@@ -140,30 +155,29 @@ const defaultAvatar = "/default-avatar.png"
 const store = useUserStore()
 const isOwnProfile = computed(() => user.value && store.userId == user.value.id)
 
-const isCreatingPhotographer = ref(false)
-
 const editForm = ref({
   name: "",
   email: "",
   avatar: null,
 })
 
-const enableEdit = () => {
+function openEditModal() {
   editForm.value.name = user.value.name
   editForm.value.email = user.value.email
-  isEditing.value = true
+  editForm.value.avatar = null
+  avatarPreview.value = null
+  errorMessage.value = null
+  showEditModal.value = true
 }
-
-const cancelEdit = () => {
+function closeEditModal() {
   editForm.value.name = user.value.name
   editForm.value.email = user.value.email
   editForm.value.avatar = null
   if (avatarPreview.value) URL.revokeObjectURL(avatarPreview.value)
   avatarPreview.value = null
-  isEditing.value = false
+  showEditModal.value = false
   errorMessage.value = null
 }
-
 const handleAvatarChange = (e) => {
   const file = e.target.files[0]
   if (!file) return
@@ -198,7 +212,7 @@ const handleSave = async () => {
     const data = await res.json()
     if (!data.user) throw new Error(data.message || "Помилка при оновленні профілю")
     user.value = data.user
-    cancelEdit()
+    closeEditModal()
   } catch (err) {
     errorMessage.value = err.message || "Не вдалося оновити профіль"
   }
@@ -233,8 +247,24 @@ onMounted(async () => {
 })
 </script>
 
-<style>
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity .28s;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+.animate-pop {
+  animation: pop-in .23s cubic-bezier(.4,2,.6,1);
+}
+@keyframes pop-in {
+  0% { transform: scale(.92); opacity: 0;}
+  100% { transform: scale(1); opacity: 1;}
+}
 body {
   font-family: "Inter", sans-serif;
+  background: #0a0a0f;
 }
 </style>
