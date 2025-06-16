@@ -10,19 +10,86 @@
   </div>
 
   <div v-else class="min-h-screen bg-gradient-to-br from-black to-gray-900 p-10 flex items-center justify-center">
-    <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 shadow-2xl max-w-4xl w-full">
-      <h1 class="text-3xl font-light text-white mb-4 text-center">{{ user.name }}</h1>
-      <div class="flex justify-center mb-6">
-        <img
-            :src="avatarPreview || user.avatar || defaultAvatar"
-            :alt="user.name"
-            class="w-36 h-36 rounded-full object-cover border-2 border-blue-500/30 shadow-lg"
-        />
-      </div>
+    <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-6 shadow-2xl max-w-4xl w-full space-y-6">
 
-      <!-- photographer role -->
-      <template v-if="user.role === 'photographer' && photographer">
-        <div class="text-center space-y-2 text-white/80 mb-6 flex flex-col">
+      <!-- Профиль пользователя -->
+      <form class="flex flex-col items-center gap-4" @submit.prevent="handleSave">
+        <div class="flex justify-center mb-4">
+          <img
+              :src="avatarPreview || user.avatar || defaultAvatar"
+              :alt="user.name"
+              class="w-36 h-36 rounded-full object-cover border-2 border-blue-500/30 shadow-lg"
+          />
+        </div>
+        <div class="w-full max-w-xs">
+          <label class="block mb-1 text-white/70" for="name">Імʼя</label>
+          <input
+              v-if="isEditing"
+              v-model="editForm.name"
+              id="name"
+              type="text"
+              class="w-full rounded-lg px-4 py-2 bg-white/20 border border-white/10 text-white"
+              required
+          />
+          <div v-else class="text-xl">{{ user.name }}</div>
+        </div>
+
+        <div class="w-full max-w-xs">
+          <label class="block mb-1 text-white/70" for="email">Email</label>
+          <input
+              v-if="isEditing"
+              v-model="editForm.email"
+              id="email"
+              type="email"
+              class="w-full rounded-lg px-4 py-2 bg-white/20 border border-white/10 text-white"
+              required
+          />
+          <div v-else class="text-lg">{{ user.email }}</div>
+        </div>
+
+        <div class="w-full max-w-xs">
+          <label class="block mb-1 text-white/70">Аватар</label>
+          <input
+              v-if="isEditing"
+              type="file"
+              accept="image/*"
+              class="block"
+              @change="handleAvatarChange"
+          />
+        </div>
+
+        <div v-if="errorMessage" class="text-red-400 text-sm">{{ errorMessage }}</div>
+
+        <div class="flex gap-3 mt-4">
+          <button
+              v-if="!isEditing && isOwnProfile"
+              type="button"
+              class="px-6 py-2 text-white bg-gray-600/30 hover:bg-gray-600/50 rounded-full border border-gray-400/40 shadow-lg transition"
+              @click="enableEdit"
+          >
+            Редагувати
+          </button>
+          <button
+              v-if="isEditing"
+              type="submit"
+              class="px-6 py-2 text-white bg-blue-300/30 hover:bg-blue-300/50 rounded-full border border-blue-300/40 shadow-lg transition"
+          >
+            Зберегти
+          </button>
+          <button
+              v-if="isEditing"
+              type="button"
+              class="px-6 py-2 text-white bg-neutral-300/30 hover:bg-neutral-300/50 rounded-full border border-neutral-300/40 shadow-lg transition"
+              @click="cancelEdit"
+          >
+            Відмінити
+          </button>
+        </div>
+      </form>
+
+      <!-- photographer role — карточка или создание профиля -->
+      <div v-if="user.role === 'photographer'">
+        <div v-if="photographer" class="text-center space-y-2 text-white/80 mb-2 flex flex-col">
           <p class="text-lg font-semibold">{{ photographer.name }}</p>
           <p class="text-lg">Місто: {{ photographer.city }}</p>
           <p class="text-lg">Стиль: {{ photographer.style }}</p>
@@ -35,77 +102,23 @@
             Перейти до профілю фотографа
           </LazyNuxtLink>
         </div>
-      </template>
-
-      <!-- guest/admin role -->
-      <template v-else>
-        <form class="flex flex-col items-center gap-4" @submit.prevent="handleSave">
-          <div class="w-full max-w-xs">
-            <label class="block mb-1 text-white/70" for="name">Імʼя</label>
-            <input
-                v-if="isEditing"
-                v-model="editForm.name"
-                id="name"
-                type="text"
-                class="w-full rounded-lg px-4 py-2 bg-white/20 border border-white/10 text-white"
-                required
-            />
-            <div v-else class="text-xl">{{ user.name }}</div>
-          </div>
-
-          <div class="w-full max-w-xs">
-            <label class="block mb-1 text-white/70" for="email">Email</label>
-            <input
-                v-if="isEditing"
-                v-model="editForm.email"
-                id="email"
-                type="email"
-                class="w-full rounded-lg px-4 py-2 bg-white/20 border border-white/10 text-white"
-                required
-            />
-            <div v-else class="text-lg">{{ user.email }}</div>
-          </div>
-
-          <div class="w-full max-w-xs">
-            <label class="block mb-1 text-white/70">Аватар</label>
-            <input
-                v-if="isEditing"
-                type="file"
-                accept="image/*"
-                class="block"
-                @change="handleAvatarChange"
-            />
-          </div>
-
-          <div v-if="errorMessage" class="text-red-400 text-sm">{{ errorMessage }}</div>
-
-          <div class="flex gap-3 mt-4">
-            <button
-                v-if="!isEditing && isOwnProfile"
-                type="button"
-                class="px-6 py-2 text-white bg-gray-600/30 hover:bg-gray-600/50 rounded-full border border-gray-400/40 shadow-lg transition"
-                @click="enableEdit"
-            >
-              Редагувати
-            </button>
-            <button
-                v-if="isEditing"
-                type="submit"
-                class="px-6 py-2 text-white bg-blue-300/30 hover:bg-blue-300/50 rounded-full border border-blue-300/40 shadow-lg transition"
-            >
-              Зберегти
-            </button>
-            <button
-                v-if="isEditing"
-                type="button"
-                class="px-6 py-2 text-white bg-neutral-300/30 hover:bg-neutral-300/50 rounded-full border border-neutral-300/40 shadow-lg transition"
-                @click="cancelEdit"
-            >
-              Відмінити
-            </button>
-          </div>
-        </form>
-      </template>
+        <div v-else class="flex flex-col items-center mt-4">
+          <button
+              v-if="isOwnProfile"
+              @click="isCreatingPhotographer = true"
+              class="px-8 py-2 text-white bg-green-600 hover:bg-green-700 rounded-full shadow-lg font-semibold transition"
+          >
+            Створити профіль фотографа
+          </button>
+          <!-- Модальная форма создания профиля фотографа -->
+          <AddPhotographerForm
+              v-if="isCreatingPhotographer"
+              :userId="user.id"
+              @close="isCreatingPhotographer = false"
+              @created="onPhotographerCreated"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -114,6 +127,7 @@
 import { useRoute } from "vue-router"
 import { ref, onMounted, computed } from "vue"
 import { useUserStore } from "../../../stores/user"
+import AddPhotographerForm from "../../../components/AddPhotographerForm.vue"
 
 const route = useRoute()
 const user = ref(null)
@@ -125,6 +139,8 @@ const defaultAvatar = "/default-avatar.png"
 
 const store = useUserStore()
 const isOwnProfile = computed(() => user.value && store.userId == user.value.id)
+
+const isCreatingPhotographer = ref(false)
 
 const editForm = ref({
   name: "",
@@ -186,6 +202,11 @@ const handleSave = async () => {
   } catch (err) {
     errorMessage.value = err.message || "Не вдалося оновити профіль"
   }
+}
+
+function onPhotographerCreated(newPhotographer) {
+  photographer.value = newPhotographer
+  isCreatingPhotographer.value = false
 }
 
 onMounted(async () => {
